@@ -14,12 +14,12 @@ print(out)
 with open(PACKAGES) as f:
     base = yaml.safe_load(f.read())
 for p in EXTERNALS:
-    if f'{p}@' not in out:
+    if f'{p}@' not in out and p not in base['packages']:
         path = [x for x in os.environ['CMAKE_PREFIX_PATH'].split(':') if f'/{p}/' in x]
         if not path:
             print(f'Unable to find external {p}')
             continue
         path = path[0]
         version = re.search(VERSION, path).group(0)
-        base['packages'][f'{p}'] = {'externals': [{'spec': f'{p}@{version}', 'prefix': f'{path}'}]}
+        base['packages'][p] = {'externals': [{'spec': f'{p}@{version}', 'prefix': f'{path}'}]}
 yaml.dump(base, open(PACKAGES, 'w'))
