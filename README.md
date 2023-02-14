@@ -1,2 +1,29 @@
 # key4hep-dev-utils
 Utilities for development of the key4hep stack
+
+# Running the tests
+
+## Troubleshooting
+
+### Code 403 on requests
+The Github REST API limits the number of requests that can be made. For an
+unauthenticated user it's 60 per hour so it's likely this is the case if you
+have run the tests a few times.
+Run `curl -i https://api.github.com/users/octocat`. If the limit is hit something like this will be shown:
+```
+...
+x-ratelimit-limit: 60
+x-ratelimit-remaining: 0
+x-ratelimit-reset: 1676361860
+x-ratelimit-resource: core
+x-ratelimit-used: 60
+content-length: 280
+x-github-request-id: 9506:1A1C:F7D0CD:FCC1BE:63EB3C83
+
+{"message":"API rate limit exceeded for XXX.XXX.XXX.XX. (But here's the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)","documentation_url":"https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting"}
+```
+
+The best way to solve this is to [create a github token][https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token]. And then adding an `auth` field to the request:
+``` python
+    response = requests.get(f'https://api.github.com/repos/{owner}/{repo}/pulls/{number}', auth=(user, token))
+```
