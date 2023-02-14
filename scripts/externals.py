@@ -6,7 +6,7 @@ import yaml
 
 PACKAGES = '/root/.spack/packages.yaml'
 EXTERNALS = ['root', 'cmake', 'python', 'py-cython', 'py-pip', 'libyaml', 'py-setuptools', 'py-wheel', 'py-markupsafe',
-             'py-jinja2', 'py-pyyaml', 'nlohmann-json', 'intel-tbb', 'boost', 'gaudi', 'dd4hep', 'gdb']
+             'py-jinja2', 'py-pyyaml', 'py-six', 'nlohmann-json', 'intel-tbb', 'boost', 'gaudi', 'dd4hep', 'gdb', 'marlin',]
 VERSION = re.compile('(:?\d+\.)+\d*')
 
 out = subprocess.check_output(f'spack external find {" ".join(EXTERNALS)}'.split()).decode()
