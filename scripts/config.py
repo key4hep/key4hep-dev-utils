@@ -6,7 +6,7 @@ import yaml
 import re
 
 CONFIG = '/Package/spack/var/spack/environments/dev/spack.yaml'
-CMAKE_PATHS = ['nlohmann-json']
+CMAKE_PATHS = ['nlohmann-json', 'catch2']
 CPATHS = ['vdt']
 PYTHON = ['py-markupsafe']
 VERSION = re.compile('\d*\.\d*\.\d*')
