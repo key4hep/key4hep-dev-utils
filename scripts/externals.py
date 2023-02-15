@@ -24,7 +24,7 @@ for p in EXTERNALS:
         path = path[0]
         version = re.search(VERSION, path).group(0)
         base['spack']['packages'][p] = {'externals': [{'spec': f'{p}@{version}', 'prefix': f'{path}'}]}
-yaml.dump(base, open(PACKAGES, 'w'))
+yaml.dump(base, open(CONFIG, 'w'))
 
 # When A depends on B which depends on C but B is an external,
 # spack won't set up the dependency C for us so it has to be done manually
