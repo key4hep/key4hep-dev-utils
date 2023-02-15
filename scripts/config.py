@@ -8,7 +8,7 @@ import re
 CONFIG = '/Package/spack/var/spack/environments/dev/spack.yaml'
 CMAKE_PATHS = ['nlohmann-json', 'catch2']
 CPATHS = ['vdt']
-PYTHON = ['py-markupsafe']
+PYTHON = ['py-markupsafe', 'root']
 VERSION = re.compile('\d*\.\d*\.\d*')
 
 with open(CONFIG) as f:
