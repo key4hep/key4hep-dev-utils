@@ -58,13 +58,14 @@ base['spack']['compilers'][0]['compiler']['environment']['prepend_path']['CPATH'
 
 paths = []
 for p in EXTERNALS:
-    if f'/{p}/' in os.environ['CMAKE_PREFIX_PATH'].split(':'):
-        if os.path.exists(os.path.join(x, 'lib/python3.9/site-packages')):
-            paths.append(os.path.join(x, 'lib/python3.9/site-packages'))
-        elif os.path.exists(os.path.join(x, 'python')):
-            paths.append(os.path.join(x, 'python'))
-        else:
-            paths.append(os.path.join(x, 'lib'))
+    for x in os.environ['CMAKE_PREFIX_PATH'].split(':'):
+        if f'/{p}/' in x:
+            if os.path.exists(os.path.join(x, 'lib/python3.9/site-packages')):
+                paths.append(os.path.join(x, 'lib/python3.9/site-packages'))
+            elif os.path.exists(os.path.join(x, 'python')):
+                paths.append(os.path.join(x, 'python'))
+            else:
+                paths.append(os.path.join(x, 'lib'))
 
 base['spack']['compilers'][0]['compiler']['environment']['prepend_path']['PYTHONPATH'] = ':'.join(base['spack']['compilers'][0]['compiler']['environment']['prepend_path']['PYTHONPATH'].split(':')+paths)
 
