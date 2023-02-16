@@ -39,7 +39,7 @@ EXTERNALS = [
     'py-wheel',
     'root',
     'rsync',
-    'sim-sipm',
+    'simsipm',
     'util-linux-uuid',
     'vdt',
     'zlib',
