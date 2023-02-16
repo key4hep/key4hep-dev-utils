@@ -24,8 +24,6 @@ out = subprocess.check_output(f'spack dependents {name}'.split()).decode()
 for p in out.split():
     if p in EXCLUDE or p in repos:
         continue
-    if p not in ['podio', 'edm4hep', 'k4edm4hep2lcioconv']:
-        continue
     # TODO: fix finding the right owner
     packages.append(['key4hep', p, None])
 
