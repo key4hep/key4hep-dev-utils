@@ -5,13 +5,14 @@ import subprocess
 import sys
 import os
 
-EXCLUDE = ['cepcsw', 'dd4hep', 'gaudi', 'key4hep-stack', 'key4DCMTSim']
+EXCLUDE = set(['cepcsw', 'dd4hep', 'gaudi', 'key4hep-stack', 'key4DCMTSim'])
 
 name = sys.argv[1]
 if len(sys.argv) == 3:
     packages = [x.split() for x in sys.argv[2].split('\n')]
 else:
     packages = []
+packages = [p for p in packages if p not in EXCLUDE]
 # Spack uses the names of the repo in lower caps
 for p in packages:
     p[1] = p[1].lower()
