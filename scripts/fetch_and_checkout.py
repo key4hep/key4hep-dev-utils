@@ -4,8 +4,12 @@
 import subprocess
 import sys
 import os
+import re
 
 EXCLUDE = set(['cepcsw', 'dd4hep', 'gaudi', 'key4hep-stack', 'key4dcmtsim'])
+DEFAULT_BRANCH_PATTERN = 'Safe versions: *\n.*on branch \b([\w-]*)\b'
+
+cache = {}
 
 name = sys.argv[1]
 if len(sys.argv) == 3:  # owner name branch
@@ -23,13 +27,23 @@ for p in out.split():
     if p in EXCLUDE or p in repos:
         continue
     # TODO: fix finding the right owner
-    packages.append(['key4hep', p, None])
+    if p not in cache:
+        cache[p] = subprocess.check_output(f'spack info {p}').decode()
+
+    res = re.search(f'github\.com/([\w-]*)/', cache[p])
+    owner = res.groups(0)
+        
+    packages.append([owner, p, None])
 
 pwd = os.getcwd()
 
 for owner, repo, branch in packages:
     print(owner, repo, branch)
+    if repo not in cache:
+        cache[repo] = subprocess.check_output(f'spack info {repo}').decode()
+    res = re.search(DEFAULT_BRANCH_PATTERN, cache[repo])
+    default_branch = res.group(0)
     if branch:
         subprocess.check_output(f'git clone https://github.com/{owner}/{repo} --branch {branch} --depth 1', shell=True)
-        subprocess.check_output(f'spack develop --no-clone --path {os.path.join(pwd, repo)} {repo.lower()}@master', shell=True)
-    subprocess.check_output(f'spack add {repo.lower()}@master', shell=True)
+        subprocess.check_output(f'spack develop --no-clone --path {os.path.join(pwd, repo)} {repo.lower()}@{default_branch}', shell=True)
+    subprocess.check_output(f'spack add {repo.lower()}@{default_branch}', shell=True)
