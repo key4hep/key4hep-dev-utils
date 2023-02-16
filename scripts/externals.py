@@ -37,6 +37,7 @@ EXTERNALS = [
     'pythia8',
     'python',
     'py-wheel',
+    'range-v3',
     'root',
     'rsync',
     'simsipm',
