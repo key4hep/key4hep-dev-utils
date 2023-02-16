@@ -6,9 +6,38 @@ import yaml
 
 CONFIG = '/Package/spack/var/spack/environments/dev/spack.yaml'
 # PACKAGES = '/root/.spack/packages.yaml'
-EXTERNALS = ['root', 'vdt', 'cmake', 'python', 'py-cython', 'py-pip', 'libyaml', 'py-setuptools', 'py-wheel', 'py-markupsafe',
-             'py-jinja2', 'py-pyyaml', 'py-six', 'nlohmann-json', 'intel-tbb', 'boost', 'gaudi', 'dd4hep', 'gdb', 'marlin',
-             'catch2']
+EXTERNALS = [
+'boost',
+'catch2',
+'cmake',
+'dd4hep',
+'evtgen',
+'fastjet',
+'gaudi',
+'gdb',
+'geant4',
+'hepmc',
+'heppdt',
+'intel-tbb',
+'libyaml',
+'marlin',
+'ninja',
+'nlohmann-json',
+'py-awkward',
+'py-cython',
+'py-jinja2',
+'py-markupsafe',
+'py-pip',
+'py-pyyaml',
+'py-setuptools',
+'py-six',
+'pythia8',
+'python',
+'py-wheel',
+'root',
+'rsync',
+'vdt',
+]
 VERSION = re.compile('(:?\d+\.)+\d*')
 
 out = subprocess.check_output(f'spack external find {" ".join(EXTERNALS)}'.split()).decode()
