@@ -28,7 +28,7 @@ for p in out.split():
         continue
     # TODO: fix finding the right owner
     if p not in cache:
-        cache[p] = subprocess.check_output(f'spack info {p}').decode()
+        cache[p] = subprocess.check_output(f'spack info {p}'.split()).decode()
 
     res = re.search(f'github\.com/([\w-]*)/', cache[p])
     owner = res.groups(0)
@@ -40,7 +40,7 @@ pwd = os.getcwd()
 for owner, repo, branch in packages:
     print(owner, repo, branch)
     if repo not in cache:
-        cache[repo] = subprocess.check_output(f'spack info {repo}').decode()
+        cache[repo] = subprocess.check_output(f'spack info {repo}'.split()).decode()
     res = re.search(DEFAULT_BRANCH_PATTERN, cache[repo])
     default_branch = res.group(0)
     if branch:
