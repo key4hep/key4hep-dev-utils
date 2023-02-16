@@ -5,7 +5,7 @@ import subprocess
 import sys
 import os
 
-EXCLUDE = ['cepcsw', 'dd4hep', 'gaudi', 'key4hep-stack']
+EXCLUDE = ['cepcsw', 'dd4hep', 'gaudi', 'key4hep-stack', 'key4DCMTSim']
 
 name = sys.argv[1]
 if len(sys.argv) == 3:
@@ -16,9 +16,6 @@ else:
 for p in packages:
     p[1] = p[1].lower()
 repos = set(p[1] for p in packages)
-
-# packages.append('jmcarcell podio test'.split())
-# print(packages)
 
 out = subprocess.check_output(f'spack dependents {name}'.split()).decode()
 for p in out.split():
