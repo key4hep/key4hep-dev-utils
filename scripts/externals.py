@@ -42,6 +42,7 @@ EXTERNALS = [
     'simsipm',
     'util-linux-uuid',
     'vdt',
+    'xerces-c',
     'zlib',
 ]
 VERSION = re.compile('(:?\d+\.)+\d*')
