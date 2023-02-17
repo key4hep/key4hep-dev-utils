@@ -43,6 +43,7 @@ EXTERNALS = [
     'rsync',
     'simsipm',
     'util-linux-uuid',
+    'veccore',
     'vecgeom',
     'vdt',
     'xerces-c',
