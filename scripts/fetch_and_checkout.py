@@ -5,6 +5,7 @@ import subprocess
 import sys
 import os
 import re
+import yaml
 
 EXCLUDE = set(['cepcsw', 'dd4hep', 'gaudi', 'key4hep-stack', 'key4dcmtsim'])
 DEFAULT_BRANCH_PATTERN = r'Safe versions: *\n.*on branch \b([\w-]*)\b'
@@ -47,3 +48,23 @@ for owner, repo, branch in packages:
         subprocess.check_output(f'git clone https://github.com/{owner}/{repo} --branch {branch} --depth 1', shell=True)
         subprocess.check_output(f'spack develop --no-clone --path {os.path.join(pwd, repo)} {repo.lower()}@{default_branch}', shell=True)
     subprocess.check_output(f'spack add {repo.lower()}@{default_branch}', shell=True)
+
+
+
+CONFIG = '/Package/spack/var/spack/environments/dev/spack.yaml'
+
+with open(CONFIG) as f:
+    base = yaml.safe_load(f.read())
+    for v in ['CMAKE_PREFIX_PATH', 'LD_LIBRARY_PATH', 'PYTHONPATH']:
+        paths = os.env[v]
+        newpaths = []
+        for path in paths.split(':'):
+            for p in packages:
+                if f'/{p}/' in path:
+                    break
+            else:
+                newpaths.append(path)
+        newpaths = ':'.join(newpaths)
+        base['spack']['compilers'][0]['compiler']['environment']['prepend_path'][v] = newpaths
+
+yaml.dump(base, open(CONFIG, 'w'))
