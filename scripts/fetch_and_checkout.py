@@ -56,7 +56,7 @@ CONFIG = '/Package/spack/var/spack/environments/dev/spack.yaml'
 with open(CONFIG) as f:
     base = yaml.safe_load(f.read())
     for v in ['CMAKE_PREFIX_PATH', 'LD_LIBRARY_PATH', 'PYTHONPATH']:
-        paths = os.env[v]
+        paths = os.environ[v]
         newpaths = []
         for path in paths.split(':'):
             for p in packages:
