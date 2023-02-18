@@ -7,14 +7,15 @@ import yaml
 CONFIG = '/Package/spack/var/spack/environments/dev/spack.yaml'
 # PACKAGES = '/root/.spack/packages.yaml'
 EXTERNALS = [
+    'acts',
     'acts-dd4hep',
-    'acts-main',
     'boost',
     'catch2',
     'clhep',
     'cmake',
     'cppgsl',
     'dd4hep',
+    'delphes',
     'eigen',
     'evtgen',
     'fastjet',
