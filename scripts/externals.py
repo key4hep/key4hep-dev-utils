@@ -7,6 +7,8 @@ import yaml
 CONFIG = '/Package/spack/var/spack/environments/dev/spack.yaml'
 # PACKAGES = '/root/.spack/packages.yaml'
 EXTERNALS = [
+    'acts-dd4hep',
+    'acts-main',
     'boost',
     'catch2',
     'clhep',
