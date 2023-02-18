@@ -8,7 +8,6 @@ CONFIG = '/Package/spack/var/spack/environments/dev/spack.yaml'
 # PACKAGES = '/root/.spack/packages.yaml'
 EXTERNALS = [
     'acts',
-    'acts-dd4hep',
     'boost',
     'catch2',
     'clhep',
