@@ -7,7 +7,7 @@ import os
 import re
 import yaml
 
-EXCLUDE = set(['cepcsw', 'dd4hep', 'gaudi', 'key4hep-stack', 'key4dcmtsim'])
+EXCLUDE = set(['dd4hep', 'gaudi', 'key4hep-stack', 'key4dcmtsim'])
 DEFAULT_BRANCH_PATTERN = r'Safe versions: *\n.*on branch \b([\w-]*)\b'
 
 cache = {}
