@@ -1,0 +1,12 @@
+packages_with_ci=(
+    "edm4hep"
+    "k4clue"
+    "k4edm4hep2lcioconv"
+    "k4fwcore"
+    "k4geo"
+    "k4lcioreader"
+    "k4marlinwrapper"
+    "k4pandora"
+    "k4simdelphes"
+    "k4actstracking"
+    )
