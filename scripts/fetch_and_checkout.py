@@ -12,6 +12,9 @@ DEFAULT_BRANCH_PATTERN = r'Safe versions: *\n.*on branch \b([\w-]*)\b'
 
 cache = {}
 
+if len(sys.argv) == 1:
+    print('fetch_and_checkout.py: No packages to checkout')
+    sys.ext()
 name = sys.argv[1]
 if len(sys.argv) == 3:  # owner name branch
     packages = [x.split() for x in sys.argv[2].split('\n')]
@@ -48,8 +51,6 @@ for owner, repo, branch in packages:
         subprocess.check_output(f'git clone https://github.com/{owner}/{repo} --branch {branch} --depth 1', shell=True)
         subprocess.check_output(f'spack develop --no-clone --path {os.path.join(pwd, repo)} {repo.lower()}@{default_branch}', shell=True)
     subprocess.check_output(f'spack add {repo.lower()}@{default_branch}', shell=True)
-
-
 
 CONFIG = '/Package/spack/var/spack/environments/dev/spack.yaml'
 
