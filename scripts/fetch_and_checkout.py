@@ -16,10 +16,11 @@ if len(sys.argv) == 1:
     print('fetch_and_checkout.py: No packages to checkout')
     sys.ext()
 name = sys.argv[1]
-if len(sys.argv) == 3:  # owner name branch
+if len(sys.argv) == 3 and sys.argv[2]:  # owner name branch
     packages = [x.split() for x in sys.argv[2].split('\n')]
 else:
     packages = []
+
 # Spack uses the names of the repo in lower caps
 for p in packages:
     p[1] = p[1].lower()
@@ -51,21 +52,3 @@ for owner, repo, branch in packages:
         subprocess.check_output(f'git clone https://github.com/{owner}/{repo} --branch {branch} --depth 1', shell=True)
         subprocess.check_output(f'spack develop --no-clone --path {os.path.join(pwd, repo)} {repo.lower()}@{default_branch}', shell=True)
     subprocess.check_output(f'spack add {repo.lower()}@{default_branch}', shell=True)
-
-CONFIG = '/Package/spack/var/spack/environments/dev/spack.yaml'
-
-with open(CONFIG) as f:
-    base = yaml.safe_load(f.read())
-    for v in ['CMAKE_PREFIX_PATH', 'LD_LIBRARY_PATH', 'PYTHONPATH']:
-        paths = os.environ[v]
-        newpaths = []
-        for path in paths.split(':'):
-            for p in packages:
-                if f'/{p}/' in path:
-                    break
-            else:
-                newpaths.append(path)
-        newpaths = ':'.join(newpaths)
-        base['spack']['compilers'][0]['compiler']['environment']['prepend_path'][v] = newpaths
-
-yaml.dump(base, open(CONFIG, 'w'))
