@@ -24,7 +24,7 @@ def add_versions_to_spec(repo, spec, release, default_branch):
         spec_data = yaml.safe_load(f)
         current_specs = set([s.split('@')[0] for s in spec_data['spack']['specs']])
         current_specs.add(repo)
-        spec_data['spack']['specs'] += [f'{repo}@{default_branch}' + ' '.join(f'^{p}' for p in to_add if p not in current_specs)]
+        spec_data['spack']['specs'] += [f'{repo}@{default_branch}' + ' '.join(f'^{p}' for p in to_add if p.split('@')[0] not in current_specs)]
         f.seek(0)
         yaml.dump(spec_data, f, default_flow_style=False)
 
