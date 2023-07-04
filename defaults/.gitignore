@@ -221,4 +221,9 @@ poetry.toml
 # LSP config files
 pyrightconfig.json
 
+# Key4hep
 spack-*
+podio_generated_files.cmake
+install/
+edm4hep/edm4hep/
+edm4hep/src/
