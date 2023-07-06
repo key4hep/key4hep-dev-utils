@@ -19,18 +19,21 @@ def add_versions_to_spec(repo, spec, default_branch, release, latest_release):
         versions = os.listdir(os.path.join(release, p))
         for v in versions:
             # If the version is the scratch nightly
-            if '=develop' in v:
+            if '=develop' not in v:
+                continue
+            added = False
+            # Check also the latest nightly, if found there let's use this one
+            if os.path.isdir(os.path.join(release, p, v)):
                 latest_versions = os.listdir(os.path.join(latest_release, p))
-                # Check also the latest nightly, if found there let's use this one
                 for lv in latest_versions:
                     if '=develop' in lv:
                         to_add.append(f'{p}@{lv[:lv.find("=develop")+len("=develop")]}')
+                        added = True
                         break
-                else:
-                    to_add.append(f'{p}@{v[:v.find("=develop")+len("=develop")]}')
-                    break
-                # Found so we can break
-                break
+            if not added:
+                to_add.append(f'{p}@{v[:v.find("=develop")+len("=develop")]}')
+            # Found so we can break
+            break
     with open(spec, 'r+') as f:
         spec_data = yaml.safe_load(f)
         current_specs = set([s.split('@')[0] for s in spec_data['spack']['specs']])
