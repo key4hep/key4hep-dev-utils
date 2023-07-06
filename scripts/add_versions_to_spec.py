@@ -23,7 +23,7 @@ def add_versions_to_spec(repo, spec, default_branch, release, latest_release):
                 continue
             added = False
             # Check also the latest nightly, if found there let's use this one
-            if os.path.isdir(os.path.join(release, p, v)):
+            if os.path.isdir(os.path.join(latest_release, p)):
                 latest_versions = os.listdir(os.path.join(latest_release, p))
                 for lv in latest_versions:
                     if '=develop' in lv:
