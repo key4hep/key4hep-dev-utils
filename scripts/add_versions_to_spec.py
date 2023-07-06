@@ -5,11 +5,12 @@ import argparse
 argparser = argparse.ArgumentParser(description='Add nightly versions to spec file')
 argparser.add_argument('repo', help='Repository name')
 argparser.add_argument('spec', help='Spec file')
-argparser.add_argument('release', help='Release path')
 argparser.add_argument('default_branch', help='Default branch')
+argparser.add_argument('release', help='Scratch release path')
+argparser.add_argument('latest_release', help='Release path')
 parser = argparser.parse_args()
 
-def add_versions_to_spec(repo, spec, release, default_branch):
+def add_versions_to_spec(repo, spec, default_branch, release, latest_release):
     packages = os.listdir(release)
     to_add = []
     for p in packages:
@@ -17,8 +18,18 @@ def add_versions_to_spec(repo, spec, release, default_branch):
             continue
         versions = os.listdir(os.path.join(release, p))
         for v in versions:
+            # If the version is the scratch nightly
             if '=develop' in v:
-                to_add.append(f'{p}@{v[:v.find("=develop")+len("=develop")]}')
+                latest_versions = os.listdir(os.path.join(latest_release, p))
+                # Check also the latest nightly, if found there let's use this one
+                for lv in latest_versions:
+                    if '=develop' in lv:
+                        to_add.append(f'{p}@{lv[:lv.find("=develop")+len("=develop")]}')
+                        break
+                else:
+                    to_add.append(f'{p}@{v[:v.find("=develop")+len("=develop")]}')
+                    break
+                # Found so we can break
                 break
     with open(spec, 'r+') as f:
         spec_data = yaml.safe_load(f)
@@ -28,4 +39,4 @@ def add_versions_to_spec(repo, spec, release, default_branch):
         f.seek(0)
         yaml.dump(spec_data, f, default_flow_style=False)
 
-add_versions_to_spec(parser.repo, parser.spec, parser.release, parser.default_branch)
+add_versions_to_spec(parser.repo, parser.spec, parser.default_branch, parser.release, parser.latest_release)

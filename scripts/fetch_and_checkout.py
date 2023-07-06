@@ -5,7 +5,6 @@ import subprocess
 import sys
 import os
 import re
-import yaml
 
 EXCLUDE = set(['dd4hep', 'gaudi', 'key4hep-stack', 'key4dcmtsim', 'k4actstracking'])
 DEFAULT_BRANCH_PATTERN = r'Safe versions: *\n.*on branch \b([\w-]*)\b'
@@ -35,7 +34,7 @@ for p in out.split():
     if p not in cache:
         cache[p] = subprocess.check_output(f'spack info {p}'.split()).decode()
 
-    res = re.search(f'github\.com/([\w-]*)/', cache[p])
+    res = re.search('github\.com/([\w-]*)/', cache[p])
     owner = res.group(1)
 
     packages.append([owner, p, None])
