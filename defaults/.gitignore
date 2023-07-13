@@ -225,6 +225,7 @@ pyrightconfig.json
 .vscode
 *~
 \#*\#
+.projectile
 
 # Key4hep
 spack-*
