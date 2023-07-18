@@ -6,7 +6,7 @@ import sys
 import os
 import re
 
-EXCLUDE = set(['dd4hep', 'gaudi', 'key4hep-stack', 'key4dcmtsim', 'k4actstracking'])
+EXCLUDE = set(['dd4hep', 'gaudi', 'key4hep-stack', 'key4dcmtsim', 'k4actstracking', 'k4pandora'])
 DEFAULT_BRANCH_PATTERN = r'Safe versions: *\n.*on branch \b([\w-]*)\b'
 
 cache = {}
