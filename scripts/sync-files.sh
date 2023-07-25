@@ -24,7 +24,7 @@ function git_checkout_and_update {
       cp $file $destination
       git add $destination/$file
     done
-    old_message=`git log -1|grep -v "^commit"`
+    old_message=$(git log -1 --format=%s)
     git commit -am "Syncing $(basename $files_to_sync); previous commit: ${old_message}"
     git push --quiet
     popd
