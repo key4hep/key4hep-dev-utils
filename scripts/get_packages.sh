@@ -1,4 +1,4 @@
-packages_with_ci=(
+packages=(
     "edm4hep"
     "k4clue"
     "k4edm4hep2lcioconv"
@@ -6,7 +6,7 @@ packages_with_ci=(
     "k4geo"
     "k4lcioreader"
     "k4marlinwrapper"
-    "k4pandora"
     "k4simdelphes"
     "k4actstracking"
+    "k4-project-template"
     )
