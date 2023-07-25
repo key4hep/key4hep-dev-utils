@@ -1,6 +1,21 @@
 # key4hep-dev-utils
 Utilities for development of the key4hep stack
 
+# Default files
+In `/defaults` there is a set of files that are used across the key4hep
+repositories like, for example, a `.gitignore` file. Changes to those files
+should not be made individually in each repository but here instead and then the
+changes pushed to all of them.
+
+# Utilities
+
+## Syncing to many repos
+
+There is a script to commit and push files to many repositories. The script is
+called `sync-files.sh` and will pick up all the repositories in
+`get_packages.sh` (currently all the ones with `CMakeLists.txt` that are not
+archived).
+
 # Running the tests
 
 ## Troubleshooting
