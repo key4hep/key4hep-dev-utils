@@ -229,8 +229,16 @@ pyrightconfig.json
 
 # Key4hep
 spack-*
-podio_generated_files.cmake
 install/
+## podio
+podio_generated_files.cmake
+/include/podio/podioVersion.h
+/python/podio/__init__.py
+## EDM4hep
+/python/edm4hep/__version__.py
 edm4hep/edm4hep/
 edm4hep/src/
+## k4MarlinWrapper
+test/inputFiles/*.slcio
+test/gaudi_opts/testConverterConstants.py
 
