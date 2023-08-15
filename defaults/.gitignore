@@ -241,7 +241,7 @@ podio_generated_files.cmake
 /python/edm4hep/__version__.py
 edm4hep/edm4hep/
 edm4hep/src/
-# k4FWCore
+## k4FWCore
 test/k4FWCoreTest/**/*.root
 ## k4MarlinWrapper
 test/inputFiles/*.slcio
