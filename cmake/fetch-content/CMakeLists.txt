@@ -36,7 +36,7 @@ foreach(pkgconfig_file ${pkgconfig_files})
     endforeach()
 endforeach()
 
-set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/install/")
+set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/install")
 # Needed for being able to recompile as many PACKAGE_DIR variables will be set to the install path
 # and cmake will look there for the .cmake files instead of in the build directory
 # set(ILCSOFT_CMAKE_MODULES_ROOT "${CMAKE_INSTALL_PREFIX}/cmakemodules" CACHE PATH "Path to the iLCSoft CMake modules")
