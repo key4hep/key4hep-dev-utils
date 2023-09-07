@@ -4,6 +4,35 @@ include(FetchContent)
 
 set(pkgs EDM4HEP)
 
+option(ENV_CHECK "Check if there are paths to the new packages in the environment variables" ON)
+
+set(env_variables
+    PATH
+    LD_LIBRARY_PATH
+    PYTHONPATH
+    ROOT_INCLUDE_PATH
+    CMAKE_PREFIX_PATH
+)
+
+# Check if the environment variables contain paths to the packages we are compiling
+# If ENV_CHECK is disabled, remove them from the env variables for the current cmake run
+foreach(env_var ${env_variables})
+    string(REGEX REPLACE ":" ";" current_env_var "$ENV{${env_var}}")
+    foreach(pkg ${pkgs})
+        string(TOLOWER ${pkg} pkg_lowercase)
+        if ("${current_env_var}" MATCHES "/${pkg_lowercase}/")
+            if (ENV_CHECK)
+                message(FATAL_ERROR "The environment variable ${env_var} contains a path to ${pkg_lowercase}. Remove it from ${env_var} or run cmake with -DENV_CHECK=OFF at your own risk.")
+            else()
+                message(WARNING "The environment variable ${env_var} contains a path to ${pkg_lowercase}. This may cause issues.")
+                list(FILTER current_env_var EXCLUDE REGEX "/${pkg_lowercase}/")
+            endif()
+        endif()
+    endforeach()
+    string(REGEX REPLACE ";" ":" current_env_var "${current_env_var}")
+    set(ENV{${env_var}} "${current_env_var}")
+endforeach()
+
 foreach(pkg ${pkgs})
     # Convert package name to lowercase
     string(TOLOWER ${pkg} pkg_lowercase)
