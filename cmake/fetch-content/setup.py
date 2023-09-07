@@ -26,6 +26,8 @@ build_order = ['podio',
 possible_organizations = ['key4hep', 'AIDASoft', 'iLCSoft', 'HEP-FCC',
                           'CEPC', 'CLICdp']
 
+env_variables = ['PATH', 'LD_LIBRARY_PATH', 'PYTHONPATH', 'ROOT_INCLUDE_PATH', 'CMAKE_PREFIX_PATH']
+
 parser = argparse.ArgumentParser(description='Setup a Key4hep project')
 parser.add_argument('repositories', nargs='*', help='List of repositories to clone')
 args = parser.parse_args()
@@ -119,3 +121,16 @@ print('CMakeLists.txt file created. You can now run\n\n'
       'make -j N install\n\n'
 
       'to build the project.')
+
+with open('env.sh', 'w') as f:
+    f.write('#!/bin/bash\n')
+    paths = '|'.join([f'/{p.lower()}/' for p in newls])
+    for v in env_variables:
+        f.write(rf'export {v}=$(echo ${v} | tr ":" "\n" | grep -Ev "{paths}" | tr "\n" ":")' + '\n')
+
+    f.write('export LD_LIBRARY_PATH=$PWD/install/lib:$LD_LIBRARY_PATH\n')
+    f.write('export PYTHONPATH=$PWD/install/lib/python3.8/site-packages:$PYTHONPATH\n')
+    f.write('export LD_LIBRARY_PATH=$PWD/install/lib:$PWD/install/lib64:$LD_LIBRARY_PATH\n')
+    f.write('export PYTHONPATH=$PWD/install/python:$PYTHONPATH\n')
+    f.write('export ROOT_INCLUDE_PATH=$PWD/install/include:$ROOT_INCLUDE_PATH\n')
+    f.write('export CMAKE_PREFIX_PATH=$PWD/install:$CMAKE_PREFIX_PATH\n')
