@@ -9,6 +9,16 @@ import re
 import argparse
 import requests
 
+# ANSI color codes
+RESET = "\033[0m"    # Reset to default text color
+RED = "\033[91m"      # Red text color
+GREEN = "\033[32m"    # Green text color
+YELLOW = "\033[93m"   # Yellow text color
+BLUE = "\033[94m"     # Blue text color
+MAGENTA = "\033[95m"  # Magenta text color
+CYAN = "\033[96m"     # Cyan text color
+ORANGE = "\033[33m"   # Orange text color
+
 build_order = ['podio',
                'EDM4hep',
                'LCIO',
@@ -39,11 +49,11 @@ args = parser.parse_args()
 if not os.path.exists('CMakeLists.txt'):
     shutil.copyfile(f'{os.path.dirname(__file__)}/CMakeLists.txt', 'CMakeLists.txt')
 else:
-    print("CMakeLists.txt already exists in the current directory. Aborting.")
+    print(f'{RED}CMakeLists.txt already exists in the current directory. Aborting.{RESET}')
     sys.exit(1)
 
 if 'KEY4HEP_STACK' not in os.environ:
-    print('Warning: KEY4HEP_STACK environment variable not set')
+    print(f'{ORANGE}Warning: KEY4HEP_STACK environment variable not set{RESET}')
 
 to_add = []
 # Find if there are any simlinks to the Key4hep or other packages
@@ -60,8 +70,8 @@ for f in os.listdir('.'):
     to_add.append((f, project_name))
 
 if not to_add and not args.repositories:
-    print('Warning: No repositories have been found. The template CMakeLists.txt will be copied'
-          ' but no packages will be built.')
+    print(f'{ORANGE}Warning: No repositories have been found. The template CMakeLists.txt will be copied'
+          f' but no packages will be built.{RESET}')
 
 template = """
 FetchContent_Declare(
@@ -113,13 +123,12 @@ for p in build_order:
             break
 newls += all_packages
 if all_packages:
-    print(f'Warning: the following packages "{" ".join(all_packages)}" were not found in the build order.'
-        ' They will be added at the end of the list. Please edit the CMakeLists.txt file manually if needed.')
+    print(f'{ORANGE}Warning: the following packages "{" ".join(all_packages)}" were not found in the build order.'
+        ' They will be added at the end of the list. Please edit the CMakeLists.txt file manually if needed.{RESET}')
 original = re.sub(r'set\(pkgs .*\)', rf'set(pkgs {" ".join(newls)})', original)
 with open('CMakeLists.txt', 'w') as cmake_list:
     cmake_list.write(original + new_text)
-print('''CMakeLists.txt file created. You can now run
-
+print(f'''{GREEN}CMakeLists.txt file created.{RESET} You can now run
 
 . env.sh
 mkdir build
