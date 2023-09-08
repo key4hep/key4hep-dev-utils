@@ -21,15 +21,18 @@ build_order = ['podio',
                'k4-project-template',
                'k4MarlinWrapper',
                'k4EDM4hep2LCIOConv',
+               'k4geo',
 ]
 
 possible_organizations = ['key4hep', 'AIDASoft', 'iLCSoft', 'HEP-FCC',
                           'CEPC', 'CLICdp']
 
-env_variables = ['PATH', 'LD_LIBRARY_PATH', 'PYTHONPATH', 'ROOT_INCLUDE_PATH', 'CMAKE_PREFIX_PATH']
+env_variables = ['PATH', 'LD_LIBRARY_PATH', 'PYTHONPATH', 'ROOT_INCLUDE_PATH',
+                 'CMAKE_PREFIX_PATH']
 
 parser = argparse.ArgumentParser(description='Setup a Key4hep project')
 parser.add_argument('repositories', nargs='*', help='List of repositories to clone')
+# parser.add_argument('--shallow', type=int, help='')
 args = parser.parse_args()
 
 # First, copy the template
@@ -39,7 +42,7 @@ else:
     print("CMakeLists.txt already exists in the current directory. Aborting.")
     sys.exit(1)
 
-if not 'KEY4HEP_STACK' in os.environ:
+if 'KEY4HEP_STACK' not in os.environ:
     print('Warning: KEY4HEP_STACK environment variable not set')
 
 to_add = []
@@ -50,7 +53,8 @@ for f in os.listdir('.'):
     if os.path.isdir(f) and 'CMakeLists.txt' in os.listdir(f):
         # Try to find the project name
         with open(os.path.join(f, 'CMakeLists.txt'), 'r') as cmake_list:
-            project_name = re.search('project\( *(\S*) *\)', cmake_list.read(), re.IGNORECASE).group(1)
+            project_name = re.search('project\( *(\S*) *\)', cmake_list.read(),
+                                     re.IGNORECASE).group(1)
             # If not found
             project_name = project_name or f
     to_add.append((f, project_name))
@@ -114,23 +118,70 @@ if all_packages:
 original = re.sub(r'set\(pkgs .*\)', rf'set(pkgs {" ".join(newls)})', original)
 with open('CMakeLists.txt', 'w') as cmake_list:
     cmake_list.write(original + new_text)
-print('CMakeLists.txt file created. You can now run\n\n'
-      'mkdir build\n'
-      'cd build\n'
-      'cmake .. -DCMAKE_INSTALL_PREFIX=../install\n'
-      'make -j N install\n\n'
+print('''CMakeLists.txt file created. You can now run
 
-      'to build the project.')
+
+. env.sh
+mkdir build
+cd build
+cmake ..
+make -j N install
+
+to build the project.''')
 
 with open('env.sh', 'w') as f:
-    f.write('#!/bin/bash\n')
     paths = '|'.join([f'/{p.lower()}/' for p in newls])
+    packages_or = ' or '.join([f'${{BLUE}}\\"/{p.lower()}/\\"${{RESET}}' for p in newls])
+    f.write('''BLUE="\e[34m"
+GREEN="\e[32m"
+RED="\e[31m"
+RESET="\e[0m"
+''')
+
+    # Check to make sure the script is being sourced
+    f.write('''
+if [ -n "$BASH_SOURCE" ]; then
+    if [ "$0" == "$BASH_SOURCE" ]; then
+        echo -e "${RED}Error${RESET}: This script should be sourced, not executed directly."
+        exit 1
+    fi
+elif [ -n "$ZSH_SOURCE" ]; then
+    if [ "$0" == "$ZSH_SOURCE" ]; then
+        echo -e "${RED}Error${RESET}: This script should be sourced, not executed directly."
+        exit 1
+    fi
+fi\n''')
+
+    f.write(f'''echo -e "Removed from the env variables\
+${{BLUE}} PATH LD_LIBRARY_PATH PYTHONPATH ROOT_INCLUDE_PATH CMAKE_PREFIX_PATH${{RESET}}\
+ any path that contains the following strings: {packages_or}"
+''')
     for v in env_variables:
         f.write(rf'export {v}=$(echo ${v} | tr ":" "\n" | grep -Ev "{paths}" | tr "\n" ":")' + '\n')
 
-    f.write('export LD_LIBRARY_PATH=$PWD/install/lib:$LD_LIBRARY_PATH\n')
-    f.write('export PYTHONPATH=$PWD/install/lib/python3.8/site-packages:$PYTHONPATH\n')
-    f.write('export LD_LIBRARY_PATH=$PWD/install/lib:$PWD/install/lib64:$LD_LIBRARY_PATH\n')
-    f.write('export PYTHONPATH=$PWD/install/python:$PYTHONPATH\n')
-    f.write('export ROOT_INCLUDE_PATH=$PWD/install/include:$ROOT_INCLUDE_PATH\n')
-    f.write('export CMAKE_PREFIX_PATH=$PWD/install:$CMAKE_PREFIX_PATH\n')
+    f.write('''echo -e "Added (if not present already) the following paths:
+${BLUE}PATH              -> $PWD/install/bin${RESET}
+${BLUE}LD_LIBRARY_PATH   -> $PWD/install/lib:$PWD/install/lib64${RESET}
+${BLUE}PYTHONPATH        -> $PWD/install/python${RESET}
+${BLUE}ROOT_INCLUDE_PATH -> $PWD/install/include${RESET}
+${BLUE}CMAKE_PREFIX_PATH -> $PWD/install${RESET}"
+
+if [[ ":$PATH:" != *":$PWD/install/bin:"* ]]; then
+    export PATH=$PWD/install/bin:$PATH
+fi
+
+if [[ ":$LD_LIBRARY_PATH:" != *":$PWD/install/lib:"* ]]; then
+    export LD_LIBRARY_PATH=$PWD/install/lib:$PWD/install/lib64:$LD_LIBRARY_PATH
+fi
+
+if [[ ":$PYTHONPATH:" != *":$PWD/install/python:"* ]]; then
+    export PYTHONPATH=$PWD/install/python:$PYTHONPATH
+fi
+
+if [[ ":$ROOT_INCLUDE_PATH:" != *":$PWD/install/include:"* ]]; then
+    export ROOT_INCLUDE_PATH=$PWD/install/include:$ROOT_INCLUDE_PATH
+fi
+
+if [[ ":$CMAKE_PREFIX_PATH:" != *":$PWD/install:"* ]]; then
+    export CMAKE_PREFIX_PATH=$PWD/install:$CMAKE_PREFIX_PATH
+fi\n''')
