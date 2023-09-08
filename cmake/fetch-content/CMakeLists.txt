@@ -1,8 +1,8 @@
+set(pkgs EDM4HEP)
+
 cmake_minimum_required(VERSION 3.12 FATAL_ERROR)
 project(key4hep-build VERSION 1.0.0)
 include(FetchContent)
-
-set(pkgs EDM4HEP)
 
 option(ENV_CHECK "Check if there are paths to the new packages in the environment variables" ON)
 
