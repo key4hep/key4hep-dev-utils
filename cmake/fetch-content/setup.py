@@ -32,6 +32,10 @@ build_order = ['podio',
                'k4MarlinWrapper',
                'k4EDM4hep2LCIOConv',
                'k4geo',
+               'k4SimGeant4',
+               'k4Reco',
+               'k4SimDelphes',
+               'FCCAnalyses',
 ]
 
 possible_organizations = ['key4hep', 'AIDASoft', 'iLCSoft', 'HEP-FCC',
@@ -124,7 +128,7 @@ for p in build_order:
 newls += all_packages
 if all_packages:
     print(f'{ORANGE}Warning: the following packages "{" ".join(all_packages)}" were not found in the build order.'
-        ' They will be added at the end of the list. Please edit the CMakeLists.txt file manually if needed.{RESET}')
+        f' They will be added at the end of the list. Please edit the CMakeLists.txt file manually if needed.{RESET}')
 original = re.sub(r'set\(pkgs .*\)', rf'set(pkgs {" ".join(newls)})', original)
 with open('CMakeLists.txt', 'w') as cmake_list:
     cmake_list.write(original + new_text)
