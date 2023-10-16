@@ -29,8 +29,8 @@ build_order = ['podio',
                'Gaudi',
                'k4FWCore',
                'k4-project-template',
+               'k4EDM4hep2LcioConv',
                'k4MarlinWrapper',
-               'k4EDM4hep2LCIOConv',
                'k4geo',
                'k4SimGeant4',
                'k4Reco',
@@ -119,8 +119,8 @@ with open('CMakeLists.txt', 'r') as cmake_list:
     original = cmake_list.read()
 all_packages = [p[1] for p in to_add] + args.repositories
 newls = []
-for p in build_order:
-    for p2 in all_packages:
+for p2 in list(all_packages):
+    for p in build_order:
         if p.lower() == p2.lower():
             newls.append(p)
             all_packages.remove(p2)
