@@ -65,6 +65,12 @@ foreach(pkgconfig_file ${pkgconfig_files})
     endforeach()
 endforeach()
 
+# Create a symbolic link for when using the cmake ExternalData to manage
+# downloading test data
+execute_process(
+    COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_BINARY_DIR}/ExternalData ${CMAKE_BINARY_DIR}/_deps/ExternalData
+)
+
 set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/install")
 # Needed for being able to recompile as many PACKAGE_DIR variables will be set to the install path
 # and cmake will look there for the .cmake files instead of in the build directory
