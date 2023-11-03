@@ -124,7 +124,7 @@ with open('CMakeLists.txt', 'w') as f:
                             downloaded_packages=downloaded_packages,
                             build_order=packages_in_order))
 
-shutil.rmtree('CMakeLists.txt.jinja2')
+os.remove('CMakeLists.txt.jinja2')
 
 print(f'''{GREEN}CMakeLists.txt file created.{RESET} You can now run
 
