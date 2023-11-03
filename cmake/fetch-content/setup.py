@@ -52,7 +52,7 @@ args = parser.parse_args()
 
 # First, copy the template
 if not os.path.exists('CMakeLists.txt'):
-    shutil.copyfile(f'{os.path.dirname(__file__)}/CMakeLists.txt', 'CMakeLists.txt')
+    shutil.copyfile(f'{os.path.dirname(__file__)}/CMakeLists.txt.jinja2', 'CMakeLists.txt.jinja2')
 else:
     print(f'{RED}CMakeLists.txt already exists in the current directory. Aborting.{RESET}')
     sys.exit(1)
@@ -123,6 +123,8 @@ with open('CMakeLists.txt', 'w') as f:
     f.write(template.render(sym_packages=sym_packages,
                             downloaded_packages=downloaded_packages,
                             build_order=packages_in_order))
+
+shutil.rm('CMakeLists.txt.jinja2')
 
 print(f'''{GREEN}CMakeLists.txt file created.{RESET} You can now run
 
