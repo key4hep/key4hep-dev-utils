@@ -33,11 +33,11 @@ foreach(env_var ${env_variables})
     set(ENV{${env_var}} "${current_env_var}")
 endforeach()
 
+# Create symlinks to each package so that it's possible to do
+# `cd <pkg> && ctest`
 foreach(pkg ${pkgs})
-    # Convert package name to lowercase
     string(TOLOWER ${pkg} pkg_lowercase)
 
-    # Create symlink
     execute_process(
         COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_BINARY_DIR}/_deps/${pkg_lowercase}-build ${pkg}
     )
@@ -65,6 +65,10 @@ foreach(pkgconfig_file ${pkgconfig_files})
     endforeach()
 endforeach()
 
+# Create the _deps folder if it doesn't exist
+execute_process(
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/_deps
+)
 # Create a symbolic link for when using the cmake ExternalData to manage
 # downloading test data
 execute_process(
