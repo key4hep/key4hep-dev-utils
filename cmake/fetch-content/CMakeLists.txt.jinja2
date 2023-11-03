@@ -1,4 +1,4 @@
-set(pkgs EDM4HEP)
+set(pkgs {% for pkg in build_order %}{{ pkg }} {% endfor %})
 
 cmake_minimum_required(VERSION 3.12 FATAL_ERROR)
 project(key4hep-build VERSION 1.0.0)
@@ -109,6 +109,37 @@ set(LCCD_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/LCCD/source/include" CACHE PATH "Path
 # Needed by k4MarlinWrapper
 set(Marlin_INCLUDE_DIRS "${CMAKE_SOURCE_DIR}/Marlin/source/include;${streamlog_INCLUDE_DIRS};${GEAR_INCLUDE_DIRS};${CMAKE_BINARY_DIR}/_deps/marlin-build" CACHE PATH "Path to Marlin include directory")
 
-
 set(Marlin_LIBRARIES Marlin)
+{% for pkg in downloaded_packages %}
+FetchContent_Declare(
+  {{ pkg.name }}
+  GIT_REPOSITORY https://github.com/{{ pkg.org }}/{{ pkg.name }}.git
+  GIT_TAG {{ pkg.tag }}
+  FIND_PACKAGE_ARGS NAMES {{ pkg.project_name }}
+)
+{% endfor %}
+{% for pkg in sym_packages %}
+FetchContent_Declare(
+  {{ pkg.name }}
+  SOURCE_DIR ${CMAKE_SOURCE_DIR}/{{ pkg.name }}
+  FIND_PACKAGE_ARGS NAMES {{ pkg.project_name }}
+)
+{% endfor %}
+FetchContent_MakeAvailable(${pkgs})
 
+# Create the _deps folder if it doesn't exist
+execute_process(
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/build/_deps
+)
+#list all the folders in _deps
+file(GLOB folders "${CMAKE_BINARY_DIR}/_deps/*")
+foreach(folder ${folders})
+    get_filename_component(folder ${folder} NAME)
+    # if it contains -src then make a symlink to -build
+    if(${folder} MATCHES "-src")
+        string(REPLACE "-src" "-build" folder_link ${folder})
+        execute_process(
+            COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_BINARY_DIR}/_deps/${folder_link} ${CMAKE_BINARY_DIR}/build/_deps/${folder}
+        )
+    endif()
+endforeach()

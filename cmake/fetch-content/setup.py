@@ -8,6 +8,7 @@ import shutil
 import re
 import argparse
 import requests
+import jinja2
 
 # ANSI color codes
 RESET = "\033[0m"    # Reset to default text color
@@ -60,45 +61,32 @@ if 'KEY4HEP_STACK' not in os.environ:
     print(f'{ORANGE}Warning: KEY4HEP_STACK environment variable not set{RESET}')
 
 to_add = []
-# Find if there are any simlinks to the Key4hep or other packages
+# Find if there are any simlinks to the Key4hep packages or other packages
 for f in os.listdir('.'):
     if f == 'CMakeLists.txt' or f == 'build':
         continue
     if os.path.isdir(f) and 'CMakeLists.txt' in os.listdir(f):
         # Try to find the project name
         with open(os.path.join(f, 'CMakeLists.txt'), 'r') as cmake_list:
-            project_name = re.search('project\( *(\S*) *\)', cmake_list.read(),
+            print('Searching for project name in', os.path.join(f, 'CMakeLists.txt'))
+            project_name = re.search('project\( *(\S*) *.*\)', cmake_list.read(),
                                      re.IGNORECASE).group(1)
             # If not found
             project_name = project_name or f
-    to_add.append((f, project_name))
+        to_add.append((f, project_name))
 
 if not to_add and not args.repositories:
     print(f'{ORANGE}Warning: No repositories have been found. The template CMakeLists.txt will be copied'
           f' but no packages will be built.{RESET}')
 
-template = """
-FetchContent_Declare(
-  {}
-  SOURCE_DIR ${{CMAKE_SOURCE_DIR}}/{}
-  FIND_PACKAGE_ARGS NAMES {}
-)
-"""
-new_text = ''
+sym_packages = []
 for f, project_name in to_add:
-    new_text += template.format(f, f, project_name)
+    sym_packages.append( {'name': f,
+                          'project_name': project_name})
 
-template = """
-FetchContent_Declare(
-  {}
-  GIT_REPOSITORY https://github.com/{}/{}.git
-  GIT_TAG {}
-  FIND_PACKAGE_ARGS NAMES {}
-)
-"""
+downloaded_packages = []
 
 for repo in args.repositories:
-
     # Guess which organization it belongs to
     for org in possible_organizations:
         r = requests.get(f"https://api.github.com/repos/{org}/{repo}")
@@ -109,29 +97,33 @@ for repo in args.repositories:
         org = 'org_not_found'
         default_branch = 'master'
     
-    new_text += template.format(repo, org, repo, default_branch, repo.upper())
-
-new_text += '\n' + 'FetchContent_MakeAvailable(${pkgs})'
+    downloaded_packages.append({'name': repo,
+                                'org': org,
+                                'tag': default_branch,
+                                'project_name': repo.upper()})
 
 # Now let's add the other repositories
-
-with open('CMakeLists.txt', 'r') as cmake_list:
-    original = cmake_list.read()
 all_packages = [p[1] for p in to_add] + args.repositories
-newls = []
+packages_in_order = []
 for p2 in list(all_packages):
     for p in build_order:
         if p.lower() == p2.lower():
-            newls.append(p)
+            packages_in_order.append(p)
             all_packages.remove(p2)
             break
-newls += all_packages
+packages_in_order += all_packages
+
 if all_packages:
     print(f'{ORANGE}Warning: the following packages "{" ".join(all_packages)}" were not found in the build order.'
         f' They will be added at the end of the list. Please edit the CMakeLists.txt file manually if needed.{RESET}')
-original = re.sub(r'set\(pkgs .*\)', rf'set(pkgs {" ".join(newls)})', original)
-with open('CMakeLists.txt', 'w') as cmake_list:
-    cmake_list.write(original + new_text)
+
+jinja2_env = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.dirname(__file__)))
+template = jinja2_env.get_template('CMakeLists.txt.jinja2')
+with open('CMakeLists.txt', 'w') as f:
+    f.write(template.render(sym_packages=sym_packages,
+                            downloaded_packages=downloaded_packages,
+                            build_order=packages_in_order))
+
 print(f'''{GREEN}CMakeLists.txt file created.{RESET} You can now run
 
 . env.sh
@@ -143,8 +135,8 @@ make -j N install
 to build the project.''')
 
 with open('env.sh', 'w') as f:
-    paths = '|'.join([f'/{p.lower()}/' for p in newls])
-    packages_or = ' or '.join([f'${{BLUE}}\\"/{p.lower()}/\\"${{RESET}}' for p in newls])
+    paths = '|'.join([f'/{p.lower()}/' for p in packages_in_order])
+    packages_or = ' or '.join([f'${{BLUE}}\\"/{p.lower()}/\\"${{RESET}}' for p in packages_in_order])
     f.write('''BLUE="\e[34m"
 GREEN="\e[32m"
 RED="\e[31m"
