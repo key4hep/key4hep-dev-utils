@@ -65,14 +65,24 @@ foreach(pkgconfig_file ${pkgconfig_files})
     endforeach()
 endforeach()
 
+# Creating a symbolic link in _deps/ExternalData works for builds that use symbolic links
 # Create the _deps folder if it doesn't exist
 execute_process(
     COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/_deps
+)
+# For builds that don't use symbolic links, create build/_deps since for some reason test files
+# appear there
+execute_process(
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/build/_deps
 )
 # Create a symbolic link for when using the cmake ExternalData to manage
 # downloading test data
 execute_process(
     COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_BINARY_DIR}/ExternalData ${CMAKE_BINARY_DIR}/_deps/ExternalData
+)
+# Also create it at the top directory (for builds that don't use symbolic links)
+execute_process(
+    COMMAND ${CMAKE_COMMAND} -E create_symlink ${CMAKE_BINARY_DIR}/ExternalData ${CMAKE_SOURCE_DIR}/ExternalData
 )
 
 set(CMAKE_INSTALL_PREFIX "${CMAKE_SOURCE_DIR}/install")
