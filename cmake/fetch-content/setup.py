@@ -102,15 +102,19 @@ for repo in args.repositories:
                                 'tag': default_branch,
                                 'project_name': repo.upper()})
 
-# Now let's add the other repositories
+# Sort the packages in the order they should be built
 all_packages = [p[1] for p in to_add] + args.repositories
 packages_in_order = []
+index_mapping = {}
 for p2 in list(all_packages):
-    for p in build_order:
+    for i, p in enumerate(build_order):
         if p.lower() == p2.lower():
-            packages_in_order.append(p)
+            index_mapping[i] = p2
             all_packages.remove(p2)
             break
+packages_in_order = [index_mapping[i] for i in sorted(index_mapping.keys())]
+# Add the packages that haven't been found at the end
+# so it's more likely that they will build
 packages_in_order += all_packages
 
 if all_packages:
