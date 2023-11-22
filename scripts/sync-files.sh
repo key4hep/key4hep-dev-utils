@@ -4,7 +4,7 @@
 # all the repositories in /key4hep-dev-utils/scripts/get_packages.sh
 
 # Usage example:
-# ./sync-ci-workflow.sh /path/to/destination/ /absolute/path/to/file1 /absolute/path/to/file2
+# ./sync-files.sh /path/to/destination/ /absolute/path/to/file1 /absolute/path/to/file2
 
 
 TOP_DIR=$(git rev-parse --show-toplevel)
