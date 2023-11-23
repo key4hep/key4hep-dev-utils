@@ -76,7 +76,8 @@ packages_in_order = [index_mapping[i] for i in sorted(index_mapping.keys())]
 # Add the packages that haven't been found at the end
 packages_in_order += packages
 
-for owner, repo, branch in packages_in_order:
+digits = len(str(len(packages_in_order)))
+for i, (owner, repo, branch) in enumerate(packages_in_order):
     print(owner, repo, branch)
     if repo not in cache:
         cache[repo] = subprocess.check_output(f'spack info {repo}'.split()).decode()
@@ -87,6 +88,6 @@ for owner, repo, branch in packages_in_order:
         continue
     default_branch = res.group(1)
     if branch:
-        subprocess.check_output(f'git clone {address.group(0)} --depth 1 -b {branch}', shell=True)
+        subprocess.check_output(f'git clone {address.group(0)} {i:0{digits}}_{repo} --depth 1 -b {branch}', shell=True)
     else:
-        subprocess.check_output(f'git clone {address.group(0)} --depth 1', shell=True)
+        subprocess.check_output(f'git clone {address.group(0)} {i:0{digits}}_{repo} --depth 1', shell=True)
