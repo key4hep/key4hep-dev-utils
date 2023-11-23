@@ -6,7 +6,29 @@ import sys
 import os
 import re
 
-EXCLUDE = set(['dd4hep', 'gaudi', 'key4hep-stack', 'key4dcmtsim', 'k4actstracking', 'k4pandora'])
+EXCLUDE = set(['dd4hep', 'gaudi', 'key4hep-stack',
+               'key4dcmtsim', 'acts', 'k4actstracking',
+               'k4pandora',])
+
+build_order = ['podio',
+               'edm4hep',
+               'lcio',
+               'ilcutil',
+               'gear',
+               'lccd',
+               'marlin',
+               'gaudi',
+               'k4fwcore',
+               'k4projecttemplate',
+               'k4edm4hep2lcioconv',
+               'k4marlinwrapper',
+               'k4geo',
+               'k4simgeant4',
+               'k4reco',
+               'k4simdelphes',
+               'fccanalyses',
+]
+
 DEFAULT_BRANCH_PATTERN = r'Safe versions: *\n.*on branch \b([\w-]*)\b'
 # Something like https://github.com/AIDASoft/DD4hep.git
 GIT_ADDRESS_PATTERN = r'http(?:s|)://github.com/[\w-]*/[\w-]*.git'
@@ -43,7 +65,18 @@ for p in out.split():
 
 pwd = os.getcwd()
 
-for owner, repo, branch in packages:
+index_mapping = {}
+for p2 in list(packages):
+    for i, p in enumerate(build_order):
+        if p.lower() == p2[1].lower():
+            index_mapping[i] = p2
+            packages.remove(p2)
+            break
+packages_in_order = [index_mapping[i] for i in sorted(index_mapping.keys())]
+# Add the packages that haven't been found at the end
+packages_in_order += packages
+
+for owner, repo, branch in packages_in_order:
     print(owner, repo, branch)
     if repo not in cache:
         cache[repo] = subprocess.check_output(f'spack info {repo}'.split()).decode()
