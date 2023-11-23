@@ -8,6 +8,8 @@ import re
 
 EXCLUDE = set(['dd4hep', 'gaudi', 'key4hep-stack', 'key4dcmtsim', 'k4actstracking', 'k4pandora'])
 DEFAULT_BRANCH_PATTERN = r'Safe versions: *\n.*on branch \b([\w-]*)\b'
+# Something like https://github.com/AIDASoft/DD4hep.git
+GIT_ADDRESS_PATTERN = r'http(?:s|)://github.com/[\w-]*/[\w-]*.git'
 
 cache = {}
 
@@ -46,8 +48,12 @@ for owner, repo, branch in packages:
     if repo not in cache:
         cache[repo] = subprocess.check_output(f'spack info {repo}'.split()).decode()
     res = re.search(DEFAULT_BRANCH_PATTERN, cache[repo])
+    address = re.search(GIT_ADDRESS_PATTERN, cache[repo])
+    if not address:
+        print(f'fetch_and_checkout.py: No git address found for {repo}')
+        continue
     default_branch = res.group(1)
     if branch:
-        subprocess.check_output(f'git clone https://github.com/{owner}/{repo} --branch {branch} --depth 1', shell=True)
+        subprocess.check_output(f'git clone {address.group(0)} --depth 1 -b {branch}', shell=True)
     else:
-        subprocess.check_output(f'git clone https://github.com/{owner}/{repo} --depth 1', shell=True)
+        subprocess.check_output(f'git clone {address.group(0)} --depth 1', shell=True)
