@@ -49,5 +49,5 @@ for owner, repo, branch in packages:
     default_branch = res.group(1)
     if branch:
         subprocess.check_output(f'git clone https://github.com/{owner}/{repo} --branch {branch} --depth 1', shell=True)
-        subprocess.check_output(f'spack develop --no-clone --path {os.path.join(pwd, repo)} {repo.lower()}@{default_branch}', shell=True)
-    subprocess.check_output(f'spack add {repo.lower()}@{default_branch}', shell=True)
+    else:
+        subprocess.check_output(f'git clone https://github.com/{owner}/{repo} --depth 1', shell=True)
