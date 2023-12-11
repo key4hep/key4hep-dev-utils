@@ -223,7 +223,6 @@ StatementAttributeLikeMacros:
 StatementMacros:
   - Q_UNUSED
   - QT_REQUIRE_VERSION
-Standard:        c++17
 TabWidth:        8
 UseTab:          Never
 VerilogBreakBetweenInstancePorts: true
