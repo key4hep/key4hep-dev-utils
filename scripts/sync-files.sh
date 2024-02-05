@@ -22,7 +22,7 @@ function git_checkout_and_update {
     pushd ${package_name}
     for file in "${files_to_sync[@]}"; do
       cp $file $destination
-      git add $destination/$file
+      git add $destination/$(basename $file)
     done
     old_message=$(git log -1 --format=%s)
     git commit -am "Syncing $(basename $files_to_sync); previous commit: ${old_message}"
