@@ -8,7 +8,7 @@ import re
 
 EXCLUDE = set(['dd4hep', 'gaudi', 'key4hep-stack',
                'key4dcmtsim', 'acts', 'k4actstracking',
-               'k4pandora',])
+               'k4pandora', 'fccdetectors'])
 
 build_order = ['podio',
                'edm4hep',
