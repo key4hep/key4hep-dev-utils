@@ -9,6 +9,7 @@ packages=(
     "k4actstracking"
     "k4-project-template"
     "k4reco"
+    "k4rectracker"
     # "CLDConfig"
     # "key4hep-tutorials"
     )
