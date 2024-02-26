@@ -6,7 +6,7 @@ import sys
 import os
 import re
 
-EXCLUDE = set(['dd4hep', 'gaudi', 'key4hep-stack',
+EXCLUDE = set(['dd4hep', 'gaudi', 'key4hep-stack', 'ilcsoft',
                'key4dcmtsim', 'acts', 'k4actstracking',
                'k4pandora', 'fccdetectors'])
 
