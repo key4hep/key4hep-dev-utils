@@ -3,7 +3,7 @@ macro(key4hep_set_compiler_flags)
     return()
   endif()
 
-  set(COMPILER_FLAGS "-fPIC -Wall -Wextra -Wpedantic -Wshadow")
+  set(COMPILER_FLAGS "-fPIC -Wall -Wextra -Wpedantic -Wshadow -Wdeprecated")
 
   if(CMAKE_CXX_COMPILER_ID MATCHES "^(Apple)?Clang$")
     set(COMPILER_FLAGS "${COMPILER_FLAGS} -Winconsistent-missing-override -Wheader-hygiene -fcolor-diagnostics")
