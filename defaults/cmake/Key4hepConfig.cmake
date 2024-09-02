@@ -31,12 +31,15 @@ macro(key4hep_set_build_type)
   endif()
 endmacro()
 
-macro(key4hep_set_cxx_standard)
+macro(key4hep_set_cxx_standard_and_extensions)
   set(CMAKE_CXX_STANDARD 20 CACHE STRING "")
 
   if(NOT CMAKE_CXX_STANDARD MATCHES "20|23")
     message(FATAL_ERROR "Unsupported C++ standard: ${CMAKE_CXX_STANDARD}, supported values are 20 and 23")
   endif()
+
+  set(CMAKE_CXX_STANDARD_REQUIRED ON)
+  set(CMAKE_CXX_EXTENSIONS OFF)
 
 endmacro()
 
@@ -44,4 +47,4 @@ endmacro()
 
 key4hep_set_compiler_flags()
 key4hep_set_build_type()
-key4hep_set_cxx_standard()
+key4hep_set_cxx_standard_and_extensions()
