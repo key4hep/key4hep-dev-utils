@@ -25,7 +25,7 @@ function git_checkout_and_update {
       git add $destination/$(basename $file)
     done
     old_message=$(git log -1 --format=%s)
-    git commit -am "Add concurrency to the Key4hep workflows"
+    git commit -am "Syncing $(basename $files_to_sync); previous commit: ${old_message}"
     git push --quiet
     popd
   done

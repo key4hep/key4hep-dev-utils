@@ -16,7 +16,6 @@ macro(key4hep_set_compiler_flags)
 endmacro()
 
 macro(key4hep_set_build_type)
-  message(WARNING "CMAKE_CONFIGURATION_TYPES: ${CMAKE_CONFIGURATION_TYPES}")
   if(NOT CMAKE_CONFIGURATION_TYPES)
     if(NOT CMAKE_BUILD_TYPE)
       set(CMAKE_BUILD_TYPE RelWithDebInfo
