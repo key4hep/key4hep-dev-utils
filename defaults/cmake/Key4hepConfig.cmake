@@ -16,15 +16,20 @@ macro(key4hep_set_compiler_flags)
 endmacro()
 
 macro(key4hep_set_build_type)
+
+  # For ccmake and cmake-gui
+  set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS
+    "None" "Debug" "Release" "MinSizeRel" "RelWithDebInfo")
+
   if(NOT CMAKE_CONFIGURATION_TYPES)
     if(NOT CMAKE_BUILD_TYPE)
       set(CMAKE_BUILD_TYPE RelWithDebInfo
-        CACHE STRING "Choose the type of build, options are: None Release MinSizeRel Debug RelWithDebInfo"
+        CACHE STRING "Choose the type of build, options are: None, Release, MinSizeRel, Debug, RelWithDebInfo (default)"
         FORCE
         )
     else()
       set(CMAKE_BUILD_TYPE "${CMAKE_BUILD_TYPE}"
-        CACHE STRING "Choose the type of build, options are: None Release MinSizeRel Debug RelWithDebInfo"
+        CACHE STRING "Choose the type of build, options are: None, Release, MinSizeRel, Debug, RelWithDebInfo (default)"
         FORCE
         )
     endif()
@@ -43,8 +48,37 @@ macro(key4hep_set_cxx_standard_and_extensions)
 
 endmacro()
 
+macro(key4hep_set_rpath)
+  #  When building, don't use the install RPATH already (but later on when installing)
+  set(CMAKE_SKIP_BUILD_RPATH FALSE)         # don't skip the full RPATH for the build tree
+  set(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE) # use always the build RPATH for the build tree
+  set(CMAKE_MACOSX_RPATH TRUE)              # use RPATH for MacOSX
+  set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE) # point to directories outside the build tree to the install RPATH
+
+  # Check whether to add RPATH to the installation (the build tree always has the RPATH enabled)
+  if(APPLE)
+    set(CMAKE_INSTALL_NAME_DIR "@rpath")
+    set(CMAKE_INSTALL_RPATH "@loader_path/../lib")    # self relative LIBDIR
+    # the RPATH to be used when installing, but only if it's not a system directory
+    list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/lib" isSystemDir)
+    if("${isSystemDir}" STREQUAL "-1")
+      set(CMAKE_INSTALL_RPATH "@loader_path/../lib")
+    endif("${isSystemDir}" STREQUAL "-1")
+  elseif(DEFINED KEY4HEP_SET_RPATH AND NOT KEY4HEP_SET_RPATH)
+    set(CMAKE_SKIP_INSTALL_RPATH TRUE)           # skip the full RPATH for the install tree
+  else()
+    set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${LIBDIR}") # install LIBDIR
+    # the RPATH to be used when installing, but only if it's not a system directory
+    list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/lib" isSystemDir)
+    if("${isSystemDir}" STREQUAL "-1")
+      set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${LIBDIR}")
+    endif("${isSystemDir}" STREQUAL "-1")
+  endif()
+endmacro()
+
 ###################################################
 
 key4hep_set_compiler_flags()
 key4hep_set_build_type()
 key4hep_set_cxx_standard_and_extensions()
+key4hep_set_rpath()
