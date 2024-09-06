@@ -11,5 +11,6 @@ packages=(
     "k4reco"
     "k4rectracker"
     "CLDConfig"
+    "k4gaudipandora"
     # "key4hep-tutorials"
     )
