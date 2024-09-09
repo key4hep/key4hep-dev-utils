@@ -14,7 +14,7 @@ macro(key4hep_set_compiler_flags)
 
   if (DEFINED KEY4HEP_SET_COMPILER_FLAGS AND NOT KEY4HEP_SET_COMPILER_FLAGS)
   else()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${COMPILER_FLAGS}")
+    set(CMAKE_CXX_FLAGS "${COMPILER_FLAGS} ${CMAKE_CXX_FLAGS}")
   endif()
 
 endmacro()
