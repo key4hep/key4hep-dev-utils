@@ -1,4 +1,5 @@
 packages=(
+    # Key4hep
     "edm4hep"
     "k4clue"
     "k4edm4hep2lcioconv"
@@ -13,4 +14,12 @@ packages=(
     "CLDConfig"
     "k4gaudipandora"
     # "key4hep-tutorials"
+
+    # HEP-FCC
+    "k4reccalorimeter"
+    # "fccanalyses"
+    "dual-readout"
+    "k4gen"
+    "k4simgeant4"
     )
+
