@@ -40,7 +40,6 @@ for org in orgs:
         tags = requests.get(f'https://api.github.com/repos/{org}/{name}/tags', headers=headers).json()
         # Sort by name which will mean that the latest tag is either the first or second
         # because tag v00-10 is sorted before than v00-10-0x
-        tags.sort(key=lambda x: x['name'], reverse=True)
         if len(tags) == 0:
             continue
         if len(tags) > 1:
