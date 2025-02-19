@@ -17,7 +17,7 @@ packages=(
 
     # HEP-FCC
     "k4reccalorimeter"
-    "fccanalyses"
+    # "fccanalyses"
     "dual-readout"
     "k4gen"
     "k4simgeant4"
