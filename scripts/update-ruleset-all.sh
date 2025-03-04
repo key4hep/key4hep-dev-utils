@@ -6,6 +6,8 @@
 # Usage example:
 # ./update-ruleset-all.sh
 
+set -e
+
 SCRIPT_DIR=$(dirname "$0")
 source $SCRIPT_DIR/get_packages.sh
 

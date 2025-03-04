@@ -1,4 +1,10 @@
 #!/bin/bash
+
+# This script is used to update rulesets a single repository on Github
+
+# Usage example:
+# ./update-ruleset.sh organization/repo
+
 set -e
 
 repo=$1
