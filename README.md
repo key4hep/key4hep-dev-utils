@@ -16,6 +16,13 @@ called `sync-files.sh` and will pick up all the repositories in
 `get_packages.sh` (currently all the ones with `CMakeLists.txt` that are not
 archived).
 
+## Github rulesets
+
+To update the github rulesets for many repositories run
+`scripts/update-ruleset-all.sh`. To update the default ruleset used the easiest
+way is to create one in Github, export it and then overwrite the json file
+`defaults/github/default-branch-ruleset.json`.
+
 # Running the tests
 
 ## Troubleshooting
