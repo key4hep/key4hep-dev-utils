@@ -19,7 +19,7 @@ function git_checkout_and_update {
   for package_name in "${packages_list[@]}"; do
     echo "Syncing package $package_name"
     git clone --quiet git@github.com:${package_name}.git --depth 1
-    pushd ${package_name}
+    pushd $(basename $package_name)
     for file in "${files_to_sync[@]}"; do
       cp $file $destination
       git add $destination/$(basename $file)

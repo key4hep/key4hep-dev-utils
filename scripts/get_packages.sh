@@ -20,6 +20,6 @@ packages=(
     #"hep-fcc/fccanalyses"
     "hep-fcc/dual-readout"
     "hep-fcc/k4gen"
-    "hep-fcc/k4simgeant4"
+    "key4hep/k4simgeant4"
     )
 
