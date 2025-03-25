@@ -8,13 +8,11 @@ HERE = os.path.dirname(os.path.realpath(__file__))
 
 
 def main():
-    key4hep_config = yaml.safe_load(
-        open(os.path.join(HERE, "../workflows/.pre-commit-config-key4hep.yaml"))
-    )
-    if os.path.exists(os.path.join(HERE, "../workflows/.pre-commit-config-local.yaml")):
+    key4hep_config = yaml.safe_load(open(os.path.join(HERE, "../.pre-commit-config-key4hep.yaml")))
+    if os.path.exists(os.path.join(HERE, "../.pre-commit-config-local.yaml")):
         key4hep_config = key4hep_config["repos"]
         key4hep_names = [elem["repo"] for elem in key4hep_config]
-        local_config = yaml.safe_load(open(os.path.join(HERE, "../workflows/.pre-commit-config-local.yaml")))
+        local_config = yaml.safe_load(open(os.path.join(HERE, "../.pre-commit-config-local.yaml")))
         local_config = local_config["repos"]
         for local_elem in local_config:
             current_repo = local_elem["repo"]
@@ -43,7 +41,15 @@ def main():
     yaml.safe_dump(key4hep_config, open(os.path.join(HERE, "generated.yaml"), "w"))
 
     cfg = os.path.join(HERE, "generated.yaml")
-    cmd = ["pre-commit", "run", "--config", cfg, "--all-files", "--show-diff-on-failure", "--color=always"]
+    cmd = [
+        "pre-commit",
+        "run",
+        "--config",
+        cfg,
+        "--all-files",
+        "--show-diff-on-failure",
+        "--color=always",
+    ]
 
     subprocess.run(cmd, check=False)
 
