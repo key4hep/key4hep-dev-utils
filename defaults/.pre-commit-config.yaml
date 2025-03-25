@@ -3,6 +3,6 @@ repos:
     hooks:
       - id: key4hep
         name: key4hep
-        entry: ./github/workflows/scripts/run_pre_commit.py
+        entry: ./github/scripts/run_pre_commit.py
         language: system
         pass_filenames: false
