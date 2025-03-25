@@ -1,0 +1,8 @@
+repos:
+  - repo: local
+    hooks:
+      - id: key4hep
+        name: key4hep
+        entry: ./github/workflows/scripts/run_pre_commit.py
+        language: system
+        pass_filenames: false
