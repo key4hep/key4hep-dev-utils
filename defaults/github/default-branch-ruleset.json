@@ -49,19 +49,11 @@
             "integration_id": 15368
           },
           {
-            "context": "build (nightly, ubuntu22, key4hep)",
-            "integration_id": 15368
-          },
-          {
             "context": "build (nightly, ubuntu24, key4hep)",
             "integration_id": 15368
           },
           {
             "context": "build (release, alma9, key4hep)",
-            "integration_id": 15368
-          },
-          {
-            "context": "build (release, ubuntu22, key4hep)",
             "integration_id": 15368
           },
           {
