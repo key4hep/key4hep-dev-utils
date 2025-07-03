@@ -18,10 +18,14 @@ archived).
 
 ## Github rulesets
 
-To update the github rulesets for many repositories run
-`scripts/update-ruleset-all.sh`. To update the default ruleset used the easiest
+To update the github rulesets for many repositories go to `scripts` and run
+`./update-all update-ruleset.sh`. To update the default ruleset used the easiest
 way is to create one in Github, export it and then overwrite the json file
 `defaults/github/default-branch-ruleset.json`.
+
+## Github repository settings
+
+Similarly to the rulesets, run `./update-all update-github-settings.sh`
 
 # Running the tests
 
