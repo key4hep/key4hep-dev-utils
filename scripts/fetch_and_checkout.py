@@ -3,12 +3,20 @@
 # Usage: python3 fetch_and_checkout.py current_repo owner1 repo1 branch1 onwer2 repo2 branch2 ...
 import subprocess
 import sys
-import os
 import re
 
-EXCLUDE = set(['dd4hep', 'gaudi', 'key4hep-stack', 'ilcsoft',
-               'key4dcmtsim', 'acts', 'k4actstracking',
-               'k4pandora', 'fccdetectors'])
+EXCLUDE = set([
+    'acts',
+    'cepcsw',
+    'dd4hep',
+    'fccdetectors',
+    'gaudi',
+    'ilcsoft',
+    'k4actstracking',
+    'k4pandora',
+    'key4dcmtsim',
+    'key4hep-stack',
+])
 
 build_order = ['podio',
                'edm4hep',
@@ -53,18 +61,17 @@ repos = set(p[1] for p in packages)
 
 out = subprocess.check_output(f'spack dependents {name}'.split()).decode()
 for p in out.split():
+    p = p.strip()
     if p in EXCLUDE or p in repos:
         continue
     # TODO: fix finding the right owner
     if p not in cache:
         cache[p] = subprocess.check_output(f'spack info {p}'.split()).decode()
 
-    res = re.search('github\.com/([\w-]*)/', cache[p])
+    res = re.search(r'github\.com/([\w-]*)/', cache[p])
     owner = res.group(1)
 
     packages.append([owner, p, None])
-
-pwd = os.getcwd()
 
 index_mapping = {}
 for p2 in list(packages):
@@ -77,7 +84,10 @@ packages_in_order = [index_mapping[i] for i in sorted(index_mapping.keys())]
 # Add the packages that haven't been found at the end
 packages_in_order += packages
 
+# Add 01, 02, ... to the names of the packages
+# so that they are sorted in the order of the build
 digits = len(str(len(packages_in_order)))
+
 for i, (owner, repo, branch) in enumerate(packages_in_order):
     print(owner, repo, branch)
     if repo not in cache:
