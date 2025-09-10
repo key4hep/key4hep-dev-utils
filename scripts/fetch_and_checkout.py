@@ -17,6 +17,10 @@ EXCLUDE = set([
     'key4hep-stack',
 ])
 
+# From Spack we get who are the dependent packages but not the order
+# This is the build order that will be used for the packages, a package
+# that appears in the list before another one will be built before
+# Maybe there is a way of getting this ordering in Spack
 build_order = ['podio',
                'edm4hep',
                'lcio',
@@ -33,6 +37,8 @@ build_order = ['podio',
                'k4simgeant4',
                'k4marlinwrapper',
                'k4geo',
+               'k4reccalorimeter',
+               'fccsw',
                'k4reco',
                'k4simdelphes',
                'fccanalyses',
