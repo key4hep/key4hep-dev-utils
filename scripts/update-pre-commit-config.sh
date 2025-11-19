@@ -16,6 +16,6 @@ mv generated.yaml ${repo}/.pre-commit-config.yaml
 cd ${repo}
 git add .pre-commit-config.yaml
 git commit -m "Update pre-commit configuration"
-# git push --quiet
+git push --quiet
 
 echo "Updated the pre-commit configuration for $repo"
