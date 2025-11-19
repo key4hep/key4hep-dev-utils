@@ -9,7 +9,7 @@ repos:
     hooks:
       - id: clang-format
         name: clang-format
-        entry: ./.github/scripts/run_pre_commit.py
+        entry: clang-format -i
         types: [c++]
         language: system
       - id: ruff-format
