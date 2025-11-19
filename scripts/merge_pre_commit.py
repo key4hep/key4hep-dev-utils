@@ -49,7 +49,7 @@ def main():
 
     key4hep_config = {"repos": key4hep_config}
 
-    yaml.safe_dump(key4hep_config, open("generated.yaml"), "w")
+    yaml.safe_dump(key4hep_config, open("generated.yaml", "w"))
 
 
 if __name__ == "__main__":
