@@ -246,4 +246,4 @@ test/gaudi_opts/testConverterConstants.py
 # AI tools
 .claude/
 .codex/
-.aider.tags*/
+.aider.*
