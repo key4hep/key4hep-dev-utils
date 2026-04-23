@@ -243,3 +243,7 @@ test/k4FWCoreTest/**/*.root
 test/inputFiles
 test/gaudi_opts/testConverterConstants.py
 
+# AI tools
+.claude/
+.codex/
+.aider.*
