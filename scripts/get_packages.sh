@@ -14,12 +14,13 @@ packages=(
     "key4hep/CLDConfig"
     "key4hep/k4gaudipandora"
     # "key4hep-tutorials"
+    "key4hep/k4generatorsconfig"
+    "key4hep/k4mljettagger"
+    "key4hep/k4simgeant4"
+    "key4hep/k4gen"
 
     # HEP-FCC
     "hep-fcc/k4reccalorimeter"
-    #"hep-fcc/fccanalyses"
-    "hep-fcc/dual-readout"
-    "hep-fcc/k4gen"
-    "key4hep/k4simgeant4"
+    # "hep-fcc/fccanalyses"
     )
 
