@@ -71,11 +71,15 @@ macro(key4hep_set_rpath)
   elseif(DEFINED KEY4HEP_SET_RPATH AND NOT KEY4HEP_SET_RPATH)
     set(CMAKE_SKIP_INSTALL_RPATH TRUE)           # skip the full RPATH for the install tree
   else()
-    set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}") # install directory for libraries
+    set(_lib_dir "${CMAKE_INSTALL_LIBDIR}")
+    if(NOT _lib_dir)
+      set(_lib_dir "lib")
+    endif()
+    set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${_lib_dir}") # install directory for libraries
     # the RPATH to be used when installing, but only if it's not a system directory
-    list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}" isSystemDir)
+    list(FIND CMAKE_PLATFORM_IMPLICIT_LINK_DIRECTORIES "${CMAKE_INSTALL_PREFIX}/${_lib_dir}" isSystemDir)
     if("${isSystemDir}" STREQUAL "-1")
-      set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
+      set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${_lib_dir}")
     endif()
   endif()
 endmacro()
