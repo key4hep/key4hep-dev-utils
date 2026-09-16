@@ -16,6 +16,41 @@ called `sync-files.sh` and will pick up all the repositories in
 `get_packages.sh` (currently all the ones with `CMakeLists.txt` that are not
 archived).
 
+## Pre-commit configuration
+
+`defaults/.pre-commit-config-key4hep.yaml` is the centrally maintained
+Key4hep policy. Target repositories receive a normal generated
+`.pre-commit-config.yaml`, so all regular `pre-commit` commands continue to
+work without a wrapper.
+
+A target repository can add `.pre-commit-config.local.yaml` to override fields
+of an existing hook, add hooks, add repositories, or disable a centrally
+defined hook with `disabled: true`. Repositories and hooks are matched by
+`repo` and `id`; an overlay may not change a centrally pinned `rev`.
+Any top-level setting in an overlay replaces the corresponding setting from the
+base policy.
+
+Do not edit the generated file. Render one explicitly with:
+
+```
+python3 scripts/merge_pre_commit.py \
+  --global-config defaults/.pre-commit-config-key4hep.yaml \
+  --local-config /path/to/repository/.pre-commit-config.local.yaml \
+  --output /path/to/repository/.pre-commit-config.yaml
+```
+
+The local configuration is optional. To inspect a proposed update for one
+repository, run `bash scripts/update-pre-commit-config.sh key4hep/repository`.
+It validates the generated configuration and prints its diff without making
+remote changes. The bulk form is:
+
+```
+./scripts/update-all.sh update-pre-commit-config.sh
+```
+
+This requires `python3` with PyYAML and `pre-commit`. `--run-all-files`
+additionally runs all hooks before the generated configuration is discarded.
+
 ## Github rulesets
 
 To update the github rulesets for many repositories go to `scripts` and run
