@@ -1,0 +1,18 @@
+name: Validate CMake configuration
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  validate-key4hep-config:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Parse Key4hepConfig.cmake
+        run: cmake -D CMAKE_BUILD_TYPE=Debug -P defaults/cmake/Key4hepConfig.cmake
