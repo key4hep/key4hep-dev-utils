@@ -5,11 +5,17 @@
 
 # Usage example:
 # ./sync-files.sh /path/to/destination/ /absolute/path/to/file1 /absolute/path/to/file2
+# Set SYNC_PACKAGES to a whitespace-separated list of owner/repository names to
+# sync only those packages.
 
 
 TOP_DIR=$(git rev-parse --show-toplevel)
 source $TOP_DIR/scripts/get_packages.sh
 source $TOP_DIR/scripts/synced-defaults.sh
+
+if [[ -n "${SYNC_PACKAGES:-}" ]]; then
+  read -r -a packages <<< "${SYNC_PACKAGES}"
+fi
 
 
 function git_checkout_and_update {
