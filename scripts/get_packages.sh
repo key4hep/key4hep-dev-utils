@@ -18,6 +18,7 @@ packages=(
     "key4hep/k4mljettagger"
     "key4hep/k4simgeant4"
     "key4hep/k4gen"
+    "key4hep/DDML"
 
     # HEP-FCC
     "hep-fcc/k4reccalorimeter"
