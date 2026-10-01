@@ -5,6 +5,7 @@
 synced_default_files=(
   '.clang-format:.clang-format'
   'cmake/Key4hepConfig.cmake:cmake/Key4hepConfig.cmake'
+  '.github/workflows/downstream-build.yaml:.github/workflows/downstream-build.yaml'
 )
 
 # Package:source entries for defaults that do not apply to a package. Keep this
