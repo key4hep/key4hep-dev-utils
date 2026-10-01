@@ -20,7 +20,7 @@ ORGANIZATIONS = {"key4hep", "hep-fcc"}
 
 EXCLUDE = {
     "fccsw",
-    "k4actstracking",
+    "fcc_config",
     "key4hep_stack",
 }
 
