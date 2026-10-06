@@ -1,0 +1,52 @@
+name: Run clang-format and commit fixes
+
+on:
+  issue_comment:
+    types:
+      - created
+
+jobs:
+  fix-clang-format:
+    # Only makes sense on PRs here and we also immediately filter out any other
+    # comments than "/fix-style"
+    if: ${{ github.event.issue.pull_request }} && startsWith(github.event.comment.body, '/fix-style')
+    runs-on:
+      ubuntu-latest
+
+    permissions:
+      pull-requests: write
+      contents: write
+      issues: write
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Post confirmation comment
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Since this is triggered by an "issue_comment" we take the PR number
+          # from the triggering "issue"
+          gh pr comment ${{ github.event.issue.number }} --body "Let me try to fix that for you"
+      - name: Checkout PR
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr checkout ${{ github.event.issue.number }}
+          # We commit as the user who triggered the workflow
+          git config --global user.email ${{ github.event.comment.user.login }}@github.com
+          git config --global user.name ${{ github.event.comment.user.login }}
+      - uses: cvmfs-contrib/github-action-cvmfs@v3
+      - name: Run clang-format
+        run: |
+          source /cvmfs/sw-nightlies.hsf.org/key4hep/setup.sh
+          pip install identify
+          python .github/scripts/run-clang-format.py
+      - name: Commit changes
+        run: |
+          git add $(git diff --name-only)
+          git commit -m "[format] Run clang-format"
+      - name: Push changes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git push
