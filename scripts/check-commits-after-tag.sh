@@ -8,7 +8,6 @@
 exclude_key4hep=("key4hep-doc" "key4hep-dev-utils" "key4hep-spack" "key4hep-tutorials" "key4hep-images" "documents" "k4LCIOReader" "key4hep-actions" "dmx" "key4hep-reco-validation" "Gaudi" "spack" "key4DCMTSim" "key4hep-validation" "FCCDetectors" "DD4hep" "key4hep-web")
 exclude_aidasoft=("management" "aidasoft.github.io")
 exclude_hepfcc=("spack" "jenkins-pipelines" "fcc-spi" "glossary" "WebTools" "fcc-tutorials" "hep-fcc.github.io" "fcc-spack")
-exclude_cepc=("docker-cvmfs")
 exclude=()
 for name in "${exclude_key4hep[@]}"; do
     exclude+=("key4hep/$name")
@@ -19,11 +18,8 @@ done
 for name in "${exclude_hepfcc[@]}"; do
     exclude+=("HEP-FCC/$name")
 done
-for name in "${exclude_cepc[@]}"; do
-    exclude+=("CEPC/$name")
-done
 repositories=()
-for org in key4hep iLCSoft AIDASoft HEP-FCC CEPC; do
+for org in key4hep iLCSoft AIDASoft HEP-FCC; do
     repositories+=($(gh repo list "$org" --json=nameWithOwner --jq='.[] | .nameWithOwner'))
 done
 
