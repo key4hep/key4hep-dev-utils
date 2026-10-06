@@ -1,0 +1,88 @@
+name: Check synchronized defaults
+
+on:
+  pull_request:
+    paths:
+      - defaults/**
+      - scripts/get_packages.sh
+      - scripts/sync-files.sh
+      - scripts/synced-defaults.sh
+      - .github/workflows/check-synced-defaults.yml
+  push:
+    branches:
+      - main
+    paths:
+      - defaults/**
+      - scripts/get_packages.sh
+      - scripts/sync-files.sh
+      - scripts/synced-defaults.sh
+      - .github/workflows/check-synced-defaults.yml
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check-synced-defaults:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Check repositories use the current default files
+        shell: bash
+        run: |
+          set -o pipefail
+
+          source scripts/get_packages.sh
+          source scripts/synced-defaults.sh
+
+          temporary_directory="$(mktemp -d)"
+          trap 'rm -rf "${temporary_directory}"' EXIT
+          failed=0
+
+          for package in "${packages[@]}"; do
+            repository="${temporary_directory}/${package//\//__}"
+            echo "::group::${package}"
+
+            sparse_paths=()
+            for file in "${synced_default_files[@]}"; do
+              default_file="${file%%:*}"
+              is_synced_default_excluded "${package}" "${default_file}" || sparse_paths+=("${file#*:}")
+            done
+
+            if ! git clone --quiet --depth=1 --filter=blob:none --sparse \
+              "https://github.com/${package}.git" "${repository}"; then
+              echo "::error title=Clone failed::Could not clone ${package}"
+              failed=1
+              echo "::endgroup::"
+              continue
+            fi
+            if (( ${#sparse_paths[@]} )) && ! git -C "${repository}" sparse-checkout set --no-cone -- "${sparse_paths[@]}"; then
+              echo "::error title=Sparse checkout failed::Could not check out files from ${package}"
+              failed=1
+              echo "::endgroup::"
+              continue
+            fi
+
+            for file in "${synced_default_files[@]}"; do
+              default_file="${file%%:*}"
+              destination_file="${file#*:}"
+              reference="${GITHUB_WORKSPACE}/defaults/${default_file}"
+              candidate="${repository}/${destination_file}"
+
+              if is_synced_default_excluded "${package}" "${default_file}"; then
+                echo "Skipping excluded default: ${default_file}"
+              elif [[ ! -f "${candidate}" ]]; then
+                echo "::error file=${package},title=Missing synchronized file::${destination_file} is missing"
+                failed=1
+              elif ! diff -u "${reference}" "${candidate}"; then
+                echo "::error file=${package},title=Outdated synchronized file::${destination_file} differs from defaults/${default_file}"
+                failed=1
+              fi
+            done
+
+            echo "::endgroup::"
+          done
+
+          exit "${failed}"
