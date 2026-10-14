@@ -22,7 +22,7 @@ done
 for name in "${exclude_hepfcc[@]}"; do
     exclude+=("HEP-FCC/$name")
 done
-repositories=()
+repositories=("PandoraPFAOrg/LCContent")
 for org in key4hep iLCSoft AIDASoft HEP-FCC; do
     repositories+=($(gh repo list "$org" --json=nameWithOwner --jq='.[] | .nameWithOwner'))
 done
@@ -35,13 +35,15 @@ for repo in "${repositories[@]}"; do
     done
     # Get the last tag in the repository
     last_tag=$(gh api repos/"$repo"/releases/latest --jq '.tag_name' 2>/dev/null | tr -d '"')
-    if echo "$last_tag" | grep -q "Not Found"; then
+    if [ -z "$last_tag" ] || echo "$last_tag" | grep -q "Not Found"; then
+        last_tag=$(gh api repos/"$repo"/tags --jq '.[0].name // empty' 2>/dev/null)
+    fi
+    if [ -z "$last_tag" ]; then
         echo "No tag found in $repo"
         echo "-------------------------------------------------------------"
         continue
     fi
-    sha=$(gh api repos/$repo/git/ref/tags/$last_tag --jq '.object.sha' | tr -d '"')
-    date=$(gh api repos/$repo/commits/$sha --jq '.commit.author.date' | tr -d '"' )
+    date=$(gh api repos/$repo/commits/$last_tag --jq '.commit.author.date' | tr -d '"' )
 
 
     text=$(gh api "repos/$repo/commits" --jq '.[] | select(.commit.author.date > "'"$date"'" ) | (.sha[0:7] + " " + (.commit.message | split("\n")[0]))')
