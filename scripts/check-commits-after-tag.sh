@@ -22,7 +22,7 @@ done
 for name in "${exclude_hepfcc[@]}"; do
     exclude+=("HEP-FCC/$name")
 done
-repositories=("PandoraPFAOrg/LCContent")
+repositories=("PandoraPFAOrg/LCContent" "lcfiplus/LCFIPlus")
 for org in key4hep iLCSoft AIDASoft HEP-FCC; do
     repositories+=($(gh repo list "$org" --json=nameWithOwner --jq='.[] | .nameWithOwner'))
 done
