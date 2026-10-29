@@ -22,7 +22,7 @@ done
 for name in "${exclude_hepfcc[@]}"; do
     exclude+=("HEP-FCC/$name")
 done
-repositories=("PandoraPFAOrg/LCContent" "lcfiplus/LCFIPlus")
+repositories=("PandoraPFAOrg/LCContent" "lcfiplus/LCFIPlus" "delphes/delphes")
 for org in key4hep iLCSoft AIDASoft HEP-FCC; do
     repositories+=($(gh repo list "$org" --json=nameWithOwner --jq='.[] | .nameWithOwner'))
 done
@@ -33,8 +33,8 @@ for repo in "${repositories[@]}"; do
             continue 2
         fi
     done
-    # Get the last tag in the repository
-    last_tag=$(gh api repos/"$repo"/releases/latest --jq '.tag_name' 2>/dev/null | tr -d '"')
+    # Get the latest published release tag, including prereleases
+    last_tag=$(gh api repos/"$repo"/releases --jq '[.[] | select(.draft == false)][0].tag_name // empty' 2>/dev/null)
     if [ -z "$last_tag" ] || echo "$last_tag" | grep -q "Not Found"; then
         last_tag=$(gh api repos/"$repo"/tags --jq '.[0].name // empty' 2>/dev/null)
     fi
