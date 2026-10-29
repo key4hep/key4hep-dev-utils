@@ -33,8 +33,8 @@ for repo in "${repositories[@]}"; do
             continue 2
         fi
     done
-    # Get the last tag in the repository
-    last_tag=$(gh api repos/"$repo"/releases/latest --jq '.tag_name' 2>/dev/null | tr -d '"')
+    # Get the latest published release tag, including prereleases
+    last_tag=$(gh api repos/"$repo"/releases --jq '[.[] | select(.draft == false)][0].tag_name // empty' 2>/dev/null)
     if [ -z "$last_tag" ] || echo "$last_tag" | grep -q "Not Found"; then
         last_tag=$(gh api repos/"$repo"/tags --jq '.[0].name // empty' 2>/dev/null)
     fi
