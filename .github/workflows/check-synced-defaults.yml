@@ -29,6 +29,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Check out workflow templates
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: key4hep/key4hep-actions
+          ref: main
+          path: .reference-actions
+          persist-credentials: false
       - name: Check repositories use the current default files
         shell: bash
         run: |
@@ -48,7 +55,7 @@ jobs:
             sparse_paths=()
             for file in "${synced_default_files[@]}"; do
               default_file="${file%%:*}"
-              is_synced_default_excluded "${package}" "${default_file}" || sparse_paths+=("${file#*:}")
+              is_synced_default_excluded "${package}" "${default_file}" || sparse_paths+=("/${file#*:}")
             done
 
             if ! git clone --quiet --depth=1 --filter=blob:none --sparse \
@@ -68,7 +75,14 @@ jobs:
             for file in "${synced_default_files[@]}"; do
               default_file="${file%%:*}"
               destination_file="${file#*:}"
-              reference="${GITHUB_WORKSPACE}/defaults/${default_file}"
+              case "${default_file}" in
+                .github/workflows/downstream-build.yaml)
+                  reference="${GITHUB_WORKSPACE}/.reference-actions/workflows/downstream-build.yaml"
+                  ;;
+                *)
+                  reference="${GITHUB_WORKSPACE}/defaults/${default_file}"
+                  ;;
+              esac
               candidate="${repository}/${destination_file}"
 
               if is_synced_default_excluded "${package}" "${default_file}"; then
@@ -77,7 +91,7 @@ jobs:
                 echo "::error file=${package},title=Missing synchronized file::${destination_file} is missing"
                 failed=1
               elif ! diff -u "${reference}" "${candidate}"; then
-                echo "::error file=${package},title=Outdated synchronized file::${destination_file} differs from defaults/${default_file}"
+                echo "::error file=${package},title=Outdated synchronized file::${destination_file} differs from ${reference}"
                 failed=1
               fi
             done

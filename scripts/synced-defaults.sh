@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
-# Source:destination mappings for files maintained in defaults/. Destinations are
-# relative to each package repository.
+# Source:destination mappings for synchronized files. Sources are relative to
+# defaults/, except downstream-build.yaml, maintained in key4hep-actions/workflows/.
+# Destinations are relative to each package repository.
 synced_default_files=(
   '.clang-format:.clang-format'
   'cmake/Key4hepConfig.cmake:cmake/Key4hepConfig.cmake'
