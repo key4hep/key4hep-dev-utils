@@ -5,7 +5,7 @@
 # repositories belong in a tag
 
 # list of repos to exclude
-exclude_key4hep=("key4hep-doc" "key4hep-dev-utils" "key4hep-spack" "key4hep-tutorials" "key4hep-images" "documents" "k4LCIOReader" "key4hep-actions" "dmx" "key4hep-reco-validation" "Gaudi" "spack" "key4DCMTSim" "key4hep-validation" "FCCDetectors" "DD4hep" "key4hep-web" "k4GeneratorsConfig-doc" "k4Bench" "key4hep-julia-fwk" ".github")
+exclude_key4hep=("key4hep-doc" "key4hep-dev-utils" "key4hep-spack" "key4hep-tutorials" "key4hep-images" "documents" "k4LCIOReader" "key4hep-actions" "dmx" "key4hep-reco-validation" "Gaudi" "spack" "key4DCMTSim" "key4hep-validation" "FCCDetectors" "DD4hep" "key4hep-web" "k4GeneratorsConfig-doc" "k4Bench" "key4hep-julia-fwk" ".github" "k4Opt")
 exclude_ilcsoft=("ILDPerformance" "ILDConfig")
 exclude_aidasoft=("management" "aidasoft.github.io" "DDParsers")
 exclude_hepfcc=("spack" "jenkins-pipelines" "fcc-spi" "glossary" "WebTools" "fcc-tutorials" "hep-fcc.github.io" "fcc-spack" "root2gltf" "LiveSoftwareTutorials" "FCCeePhysicsStudies" "fcc-cvmfs" "EventProducer" "bib-studies" "fccsw-meetings" "fcc-physics-events" "fcc-sw-web" "FCCSW" "ALLEGRO" "FCCAnalysesWeb" "FCCDIRAC" "FCChhPhysicsPerformance" "k4DTF" "FCCTests" "dual-readout" "FCC-Publications" "umb-bookstore-example" "umb-template" "fcc-physics-events-old" "ral" "fcc-drs" "mc-productions-tutorials")
