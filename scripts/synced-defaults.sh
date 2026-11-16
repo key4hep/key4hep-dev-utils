@@ -1,12 +1,13 @@
 #!/usr/bin/env bash
 
 # Source:destination mappings for synchronized files. Sources are relative to
-# defaults/, except downstream-build.yaml, maintained in key4hep-actions/workflows/.
+# defaults/, except the build workflows, maintained in key4hep-actions/workflows/.
 # Destinations are relative to each package repository.
 synced_default_files=(
   '.clang-format:.clang-format'
   'cmake/Key4hepConfig.cmake:cmake/Key4hepConfig.cmake'
   '.github/workflows/downstream-build.yaml:.github/workflows/downstream-build.yaml'
+  '.github/workflows/key4hep-build.yaml:.github/workflows/key4hep-build.yaml'
 )
 
 # Package:source entries for defaults that do not apply to a package. Keep this

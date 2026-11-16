@@ -76,8 +76,8 @@ jobs:
               default_file="${file%%:*}"
               destination_file="${file#*:}"
               case "${default_file}" in
-                .github/workflows/downstream-build.yaml)
-                  reference="${GITHUB_WORKSPACE}/.reference-actions/workflows/downstream-build.yaml"
+                .github/workflows/downstream-build.yaml|.github/workflows/key4hep-build.yaml)
+                  reference="${GITHUB_WORKSPACE}/.reference-actions/workflows/${default_file##*/}"
                   ;;
                 *)
                   reference="${GITHUB_WORKSPACE}/defaults/${default_file}"
