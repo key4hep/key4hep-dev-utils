@@ -27,6 +27,18 @@ way is to create one in Github, export it and then overwrite the json file
 
 Similarly to the rulesets, run `./update-all update-github-settings.sh`
 
+## Finding symbols that could have internal linkage
+
+`scripts/find-internal-linkage-candidates.py` lists functions and variables
+defined in source files that are not declared in any header nor used from other
+files, so they can be put in an unnamed namespace (or made `static`) and are not
+exported from the libraries:
+```
+scripts/find-internal-linkage-candidates.py path/to/repo [path/to/other/repo ...]
+```
+Tests, examples and executables are skipped by default (see `--help`). The scan
+is text-based, so build after making changes.
+
 # Running the tests
 
 ## Troubleshooting
