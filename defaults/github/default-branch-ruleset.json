@@ -53,6 +53,10 @@
             "integration_id": 15368
           },
           {
+            "context": "build (nightly, ubuntu26)",
+            "integration_id": 15368
+          },
+          {
             "context": "build (release, alma9)",
             "integration_id": 15368
           },
