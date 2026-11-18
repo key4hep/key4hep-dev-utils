@@ -49,7 +49,7 @@
             "integration_id": 15368
           },
           {
-            "context": "build (nightly, ubuntu24)",
+            "context": "build (nightly, alma10)",
             "integration_id": 15368
           },
           {
