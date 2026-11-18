@@ -6,7 +6,8 @@
 #
 # All hooks are fetched and installed by pre-commit itself, i.e. no tools
 # (clang-format, ruff, ...) need to be available in the environment. Hook
-# versions can be updated with `pre-commit autoupdate`.
+# versions are pinned to commit hashes and can be updated with
+# `pre-commit autoupdate --freeze` (check the clang-format version afterwards).
 #
 # Repository specific adjustments that are expected:
 #   - licenseheaders: the start year (-y) and additional excludes (-x)
@@ -16,7 +17,7 @@ minimum_pre_commit_version: "4.0.0"
 
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v6.0.0
+    rev: 3e8a8703264a2f4a69428a0aa4dcb512790b2c8c # frozen: v6.0.0
     hooks:
       - id: mixed-line-ending
       - id: trailing-whitespace
@@ -27,13 +28,13 @@ repos:
   - repo: https://github.com/pre-commit/mirrors-clang-format
     # Keep the major version in sync with the LLVM version in the Key4hep stack
     # (currently 21), to get identical formatting locally and in CI
-    rev: v21.1.8
+    rev: 75ca4ad908dc4a99f57921f29b7e6c1521e10b26 # frozen: v21.1.8
     hooks:
       - id: clang-format
         types_or: [c++, c]
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.17.5
+    rev: ef6cf06c079dd6b299dfc720b0f14400c9d168e1 # frozen: v0.17.5
     hooks:
       - id: ruff-check
         types_or: [python, pyi]
@@ -41,7 +42,7 @@ repos:
         types_or: [python, pyi]
 
   - repo: https://github.com/johann-petrak/licenseheaders.git
-    rev: v0.8.8
+    rev: 4975691ae8ac8c0d08094f4a6968fffa373c1176 # frozen: v0.8.8
     hooks:
       - id: licenseheaders
         args:
